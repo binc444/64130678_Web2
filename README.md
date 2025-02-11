@@ -1,2 +1,2 @@
 # 64130678_Web2
-Hi
+Chứa các bài thực hành môn Web2
