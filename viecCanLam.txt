@@ -1,6 +1,0 @@
-Cài JDK
-	IDE: Eclipse for Enterprise
-Cài đặt webserver Tomcat
-Xem link hướng dẫn trên ele
-
-link git
