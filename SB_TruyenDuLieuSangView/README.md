@@ -1,2 +1,2 @@
 ## Kết quả:
-![Image](https://github.com/user-attachments/assets/cd813952-2df3-418e-871e-2840395d1336)
+![Image](https://github.com/user-attachments/assets/b05dbb67-39a7-4907-b062-77909a98bedc)
