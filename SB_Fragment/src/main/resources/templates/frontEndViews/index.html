@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Trang chu</title>
+</head>
+<body>
+	<table border="2" width=100%>
+		<tr height=100px>
+			<td colspan="2"> 
+				<div th:replace ="frontEndViews/FrontEndModule::dauTrang"></div>  
+			</td>
+		</tr>
+		<tr height=450px>
+			<td width="800px"> NOI DUNG  trang index
+			
+			
+			</td> 
+			 <td> <div th:replace ="frontEndViews/FrontEndModule::sideBar"></div>  
+			 </td>
+		</tr>
+		<tr><td colspan="2"> <div th:replace ="frontEndViews/FrontEndModule::chanTrang"></div>  
+			 </td>  </tr>
+	</table>
+</body>
+</html>
