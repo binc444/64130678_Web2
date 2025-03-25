@@ -15,3 +15,4 @@ Thư mục `JavaSpringBoot` chứa các bài tập về **Java Spring Boot**. Cl
 - 📁 [Bài 1: Tìm hiểu và làm quen với Spring Boot](https://github.com/binc444/64130678_Web2/tree/main/ChaoSpringBoot)
 - 📁 [Bài 2: Controller & View](https://github.com/binc444/64130678_Web2/tree/main/SB_TruyenDuLieuSangView)
 - 📁 [Bài 3: Làm quen với Fragment](https://github.com/binc444/64130678_Web2/tree/main/SB_Fragment)
+- 📁 [Bài 4: Bài tổng hợp ôn tập giữa kì](https://github.com/binc444/64130678_Web2/tree/main/TongHopGK)
