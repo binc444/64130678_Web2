@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>Home - NTU</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-	<h1>Hello</h1>
+    <div th:replace="frontEndViews/FrontEndModule::bannerTrang"></div>
+    <div th:replace="frontEndViews/FrontEndModule::navBar"></div>
+    <div th:replace="frontEndViews/FrontEndModule::dauTrang"></div>
+    <div class="container mt-4">
+        <h1 class="text-center">Welcome to NTU</h1>
+    </div>
+    <div th:replace="frontEndViews/FrontEndModule::sideBar"></div>
+    <div th:replace="frontEndViews/FrontEndModule::chanTrang"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
