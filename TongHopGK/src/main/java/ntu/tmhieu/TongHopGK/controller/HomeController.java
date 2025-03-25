@@ -9,4 +9,9 @@ public class HomeController {
 	public String trangChu() {
 		return "frontEndViews/index";
 	}
+	
+	@GetMapping("/about")
+	public String gioiThieu() {
+		return "frontEndViews/about";
+	}
 }

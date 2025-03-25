@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>About - NTU</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div th:replace="frontEndViews/FrontEndModule::bannerTrang"></div>
+    <div th:replace="frontEndViews/FrontEndModule::dauTrang"></div>
+    
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Nội dung chính -->
+            <div class="col-md-8">
+                <h2 class="text-center">Giới thiệu về tôi:</h2>
+                <div class="card shadow-lg p-4">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4>Họ và tên: <span class="fw-bold">Trần Minh Hiếu</span></h4>
+                            <p><strong>MSSV:</strong> 64130678</p>
+                            <p><strong>Ngành:</strong> Công nghệ thông tin</p>
+                            <p><strong>Email:</strong> hieu.tmi.64cntt@ntu.edu.vn</p>
+                            <p><strong>Trường:</strong> Đại học Nha Trang</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-md-4">
+                <div th:replace="frontEndViews/FrontEndModule::sideBar"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="frontEndViews/FrontEndModule::chanTrang"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
