@@ -46,11 +46,11 @@
 </head>
 <body>
 	<div th:fragment="bannerTrang" class="banner" 
-     style="background-image: url('https://ntu.edu.vn/Portals/6/ntu.edu.vn.png?ver=ckjn5juE3seliaBQFD_5vA%3d%3d'); 
-            background-size: cover; 
-            background-position: center; 
-            background-repeat: no-repeat; 
-            height: 200px;">
+	     style="background-image: url('https://ntu.edu.vn/Portals/6/ntu.edu.vn.png?ver=ckjn5juE3seliaBQFD_5vA%3d%3d'); 
+	            background-size: contain; 
+	            background-position: center; 
+	            background-repeat: no-repeat; 
+	            height: 100px;">
 	</div>
 	
     
@@ -65,7 +65,7 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
             			<li class="nav-item"><a class="nav-link" th:href="@{/about}">About</a></li>
-            			<li class="nav-item"><a class="nav-link" th:href="@{/StudentList}">List</a></li>
+            			<li class="nav-item"><a class="nav-link" th:href="@{/studentList}">List</a></li>
             			<li class="nav-item"><a class="nav-link" th:href="@{/addNew}">Add New</a></li>
                     </ul>
                 </div>
