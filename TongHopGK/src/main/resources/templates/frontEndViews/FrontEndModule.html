@@ -45,16 +45,14 @@
     </style>
 </head>
 <body>
-    <div th:fragment="bannerTrang" class="banner"></div>
-    
-    <div th:fragment="navBar" class="nav-links text-center">
-        <ul class="nav justify-content-center">
-            <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
-            <li class="nav-item"><a class="nav-link" th:href="@{/about}">About</a></li>
-            <li class="nav-item"><a class="nav-link" th:href="@{/list}">List</a></li>
-            <li class="nav-item"><a class="nav-link" th:href="@{/addnew}">Add New</a></li>
-        </ul>
-    </div>
+	<div th:fragment="bannerTrang" class="banner" 
+     style="background-image: url('https://ntu.edu.vn/Portals/6/ntu.edu.vn.png?ver=ckjn5juE3seliaBQFD_5vA%3d%3d'); 
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            height: 200px;">
+	</div>
+	
     
     <div th:fragment="dauTrang">
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -63,15 +61,29 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+            			<li class="nav-item"><a class="nav-link" th:href="@{/about}">About</a></li>
+            			<li class="nav-item"><a class="nav-link" th:href="@{/StudentList}">List</a></li>
+            			<li class="nav-item"><a class="nav-link" th:href="@{/addNew}">Add New</a></li>
+                    </ul>
+                </div>
             </div>
         </nav>
     </div>
     
-    <div th:fragment="sideBar" class="sidebar"></div>
+    <div th:fragment="sideBar" class="sidebar d-flex flex-column align-items-center">
+	    <img src="https://partyanimals.com/media/wallpapers/mobile/phone-20.png" 
+	         alt="Sidebar Image" 
+	         class="img-fluid rounded shadow" 
+	         style="max-width: 80%; height: auto; border: 3px solid white; margin-bottom: 15px;">
+	</div>
+
     
     <div th:fragment="chanTrang">
         <footer class="footer bg-dark text-white text-center py-3 mt-4">
-            <p class="mb-0">© 2025 TMH. All rights reserved.</p>
+            <p class="mb-0">© 2025 Trần Minh Hiếu. All rights reserved.</p>
         </footer>
     </div>
     
