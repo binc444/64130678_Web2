@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeController {
-	@GetMapping("/")
+
+    @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("userName", "Admin");
-        return "frontEndViews/index";
+        return "frontEndViews/index";  // Chỉ ra đường dẫn chính xác tới trang index trong thư mục con 'frontEndViews'
     }
 }
