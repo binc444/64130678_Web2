@@ -2,106 +2,195 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>NTU Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        .sidebar {
+        body {
+            font-family: Arial, sans-serif;
             background-color: #f8f9fa;
-            min-height: 100vh;
-            padding: 15px;
-            border-right: 2px solid #ccc;
-            width: 40%;
         }
-        .content-box {
-            background-color: #f3f3f3;
-            min-height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #ccc;
+
+        /* Viền ngoài trang */
+        .container-fluid {
+            border: 3px solid #000;
+            padding: 0;
+            background-color: #ffffff;
         }
-        .footer {
-            background-color: #f8f9fa;
-            text-align: center;
-            padding: 10px 0;
-            border-top: 2px solid #ccc;
-        }
+
+        /* Header */
         .header {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-bottom: 2px solid #ccc;
-        }
-        .dashboard-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .nav-link {
-            padding: 8px;
-            font-size: 16px;
-            color: black;
-        }
-        .nav-link:hover {
-            background-color: #e0e0e0;
-            border-radius: 5px;
-        }
-        .content-right {
-            width: 60%;
-        }
-        .user-info {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
             text-align: right;
+            border-bottom: 3px solid #000;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 0 0 10px 10px;
         }
+
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            border-right: 3px solid #000;
+            box-shadow: 4px 0 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar h4 {
+            text-transform: uppercase;
+            font-size: 18px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ccc;
+        }
+
+        .sidebar .nav-link {
+            color: white;
+            font-size: 16px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .sidebar .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+            border: 2px solid #fff;
+        }
+
+        /* Nội dung chính */
         .content {
-            padding-top: 50px;
+            min-height: 100vh;
+            background-color: #ffffff;
+            padding: 25px;
+            border-left: 3px solid #000;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        /* Bảng */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border: 3px solid #000;
+        }
+
+        .table th, .table td {
+            border: 2px solid #000;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            border-top: 3px solid #000;
+        }
+
+        /* Định dạng giống bảng */
+        .row {
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .col-md-3, .col-md-9 {
+            display: table-cell;
+            border: 3px solid #000;
+        }
+        .ntu-logo {
+		    max-width: 120px; /* Giảm kích thước logo */
+		    height: auto;
+		}
+        
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div th:fragment="header" class="container-fluid header d-flex justify-content-between">
-        <div>
-            <strong>TRƯỜNG ĐẠI HỌC NHA TRANG</strong> <br> KHOA CÔNG NGHỆ THÔNG TIN
-        </div>
-        <div class="user-info">[<span th:text="${userName}">UserName</span>]</div>
-    </div>
+
+    <!-- Logo Banner -->
+	<div th:fragment="banner" class="header d-flex align-items-center p-2">
+	    <img src="https://khoacntt.ntu.edu.vn/Portals/54/Logo-Khoa-CNTT-NTU.png?ver=w1WaDt4_a6t2zoyh_JwxVA%3d%3d" 
+	         alt="NTU Logo" 
+	         class="ntu-logo me-2">
+	</div>
+
 
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div th:fragment="sidebar" class="col-md-4 sidebar">
-                <!-- Image URL Section -->
-                <div>
-                    <img src="path_to_image" alt="Image" class="img-fluid mb-4">
-                </div>
-                <!-- Dashboard Links -->
-                <h5 class="dashboard-title">Dashboard</h5>
+            <nav th:fragment="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">
+                <h4>Dashboard</h4>
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/page-list}">Page - List</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/page-addnew}">Page - Addnew</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/post-list}">Post - List</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/post-addnew}">Post - Addnew</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">📄 Page - List</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">➕ Page - Add New</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">📝 Post - List</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">➕ Post - Add New</a></li>
                 </ul>
-            </div>
+            </nav>
 
             <!-- Main Content -->
-            <div th:fragment="content" class="col-md-8 content-right">
-                <div class="row">
-                    <div class="col-12 text-right">
-                        <h3>Tran Minh Hieu</h3>
-                    </div>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="header">
+                    <span th:text="${userName}">[UserName]</span>
                 </div>
-                <div class="row content">
-                    <div class="col-12 text-center">
-                        <h3 class="text-center">Content</h3>
-                    </div>
+
+                <div class="content">
+                    <h2>Giới thiệu về tôi</h2>
+                    <p>Họ và tên: <strong>Trần Minh Hiếu</strong></p>
+                    <p>MSSV: <strong>64130678</strong></p>
+                    <p>Ngày sinh: <strong>03/03/2004</strong></p>
+                    <p>Chào mừng bạn đến với hệ thống quản lý của NTU!</p>
+
+                    <!-- Bảng thông tin -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Mục</th>
+                                <th>Chi tiết</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Trường học</td>
+                                <td>Đại học Nha Trang</td>
+                            </tr>
+                            <tr>
+                                <td>Ngành học</td>
+                                <td>Công nghệ thông tin</td>
+                            </tr>
+                            <tr>
+                                <td>Sở thích</td>
+                                <td>Code, Chơi game, Nghe nhạc</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+            </main>
         </div>
     </div>
 
     <!-- Footer -->
-    <div th:fragment="footer" class="container-fluid footer">
-        ©2025 by Tran Minh Hieu – FIT.NTU
-    </div>
+    <footer th:fragment="footer" class="footer">
+        © 2025 Trần Minh Hiếu – FIT.NTU
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

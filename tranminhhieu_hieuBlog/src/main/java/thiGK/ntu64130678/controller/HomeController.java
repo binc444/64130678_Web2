@@ -10,6 +10,6 @@ public class HomeController {
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("userName", "Admin");
-        return "frontEndViews/index";  // Chỉ ra đường dẫn chính xác tới trang index trong thư mục con 'frontEndViews'
+        return "frontEndViews/index"; 
     }
 }
