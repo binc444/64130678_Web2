@@ -137,14 +137,17 @@
         <div class="row">
             <!-- Sidebar -->
             <nav th:fragment="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">
-                <h4>Dashboard</h4>
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link" href="#">📄 Page - List</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">➕ Page - Add New</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">📝 Post - List</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">➕ Post - Add New</a></li>
-                </ul>
-            </nav>
+			    <h4>Dashboard</h4>
+			    <ul class="nav flex-column">
+			        <li class="nav-item">
+					    <a class="nav-link" href="/page/all">📄 Page - List</a>
+					</li>
+			        <li class="nav-item"><a class="nav-link" href="/page/add">➕ Page - Add New</a></li>
+			        <li class="nav-item"><a class="nav-link" href="/post/all">📝 Post - List</a></li>
+			        <li class="nav-item"><a class="nav-link" href="/post/add">➕ Post - Add New</a></li>
+			    </ul>
+			</nav>
+
 
             <!-- Main Content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
