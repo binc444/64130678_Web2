@@ -15,23 +15,52 @@
             <div class="col-md-8">
                 <h2 class="text-center">Danh sách sinh viên</h2>
                 <table class="table table-bordered table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>#</th>
-                            <th>Họ tên</th>
-                            <th>Ngày sinh</th>
-                            <th>MSSV</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="student, index : ${students}">
-                            <td th:text="${index.index + 1}"></td>
-                            <td th:text="${student.hoTen}"></td>
-                            <td th:text="${student.ngaySinh}"></td>
-                            <td th:text="${student.mssv}"></td>
-                        </tr>
-                    </tbody>
-                </table>
+				    <thead class="table-dark">
+				        <tr>
+				            <th>#</th>
+				            <th>Họ tên</th>
+				            <th>Ngày sinh</th>
+				            <th>MSSV</th>
+				            <th>Hành động</th>
+				        </tr>
+				    </thead>
+				    <tbody>
+				        <tr th:each="student, index : ${students}">
+				            <td th:text="${index.index + 1}"></td>
+				
+				            <!-- Nếu đang ở chế độ chỉnh sửa, hiển thị ô nhập -->
+				            <td th:if="${student.mssv == editMSSV}">
+				                <form th:action="@{/updateStudent}" method="post">
+				                    <input type="text" name="hoTen" th:value="${student.hoTen}" required />
+				            </td>
+				            <td th:if="${student.mssv == editMSSV}">
+				                <input type="date" name="ngaySinh" th:value="${student.ngaySinh}" required />
+				            </td>
+				            <td th:if="${student.mssv == editMSSV}">
+				                <input type="hidden" name="mssv" th:value="${student.mssv}" />
+				                <span th:text="${student.mssv}"></span>
+				            </td>
+				            <td th:if="${student.mssv == editMSSV}">
+				                <button type="submit" class="btn btn-success btn-sm">Lưu</button>
+				                </form>
+				                <a th:href="@{/studentList}" class="btn btn-secondary btn-sm">Hủy</a>
+				            </td>
+				
+				            <!-- Nếu không ở chế độ chỉnh sửa, hiển thị dạng text -->
+				            <td th:unless="${student.mssv == editMSSV}" th:text="${student.hoTen}"></td>
+				            <td th:unless="${student.mssv == editMSSV}" th:text="${student.ngaySinh}"></td>
+				            <td th:unless="${student.mssv == editMSSV}" th:text="${student.mssv}"></td>
+				            <td th:unless="${student.mssv == editMSSV}">
+				                <a th:href="@{/studentList(editMSSV=${student.mssv})}" class="btn btn-warning btn-sm">Chỉnh sửa</a>
+				                <form th:action="@{/deleteStudent}" method="post" style="display:inline;">
+				                    <input type="hidden" name="mssv" th:value="${student.mssv}" />
+				                    <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+				                </form>
+				            </td>
+				        </tr>
+				    </tbody>
+				</table>
+
             </div>
             <!-- Sidebar -->
             <div class="col-md-4">
