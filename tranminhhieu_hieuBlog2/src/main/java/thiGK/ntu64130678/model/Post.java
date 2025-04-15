@@ -12,7 +12,9 @@ public class Post {
         this.content = content;
         this.categoryId = categoryId;
     }
-
+    
+    public Post() {}
+    
     // Getters
     public int getId() {
         return id;

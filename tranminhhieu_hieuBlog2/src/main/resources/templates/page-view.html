@@ -1,20 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="layout :: head" th:with="pageTitle='Chi tiết Page'">
+<head th:replace="layout :: head" th:with="pageTitle='Danh sách Page'">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
 <div th:replace="layout :: layout(~{::#mainContent})">
-    <div id="mainContent" class="container mt-4">
-        <h2 class="mb-3">Chi tiết Page</h2>
-        <p><strong>ID:</strong> <span th:text="${page.id}"></span></p>
-        <p><strong>Tên Page:</strong> <span th:text="${page.pageName}"></span></p>
-        <p><strong>Keyword:</strong> <span th:text="${page.keyword}"></span></p>
-        <p><strong>Nội dung:</strong> <span th:text="${page.content}"></span></p>
-        <p><strong>Parent Page ID:</strong> <span th:text="${page.parentPageId}"></span></p>
-        
-        <a th:href="@{/page/all}" class="btn btn-secondary mt-3">Quay lại danh sách</a>
+    <div id="mainContent">
+        <h2 class="text-center mb-4">Danh sách Page</h2>
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Page</th>
+                    <th>Parent Page ID</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p : ${pages}">
+                    <td th:text="${p.id}"></td>
+                    <td th:text="${p.pageName}"></td>
+                    <td th:text="${p.parentPageId}"></td>
+                    <td>
+                        <a th:href="@{'/page/view/' + ${p.id}}" class="btn btn-sm btn-success">View</a>
+                        <a th:href="@{'/page/edit/' + ${p.id}}" class="btn btn-sm btn-warning">Edit</a>
+                        <a th:href="@{'/page/delete/' + ${p.id}}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 </body>

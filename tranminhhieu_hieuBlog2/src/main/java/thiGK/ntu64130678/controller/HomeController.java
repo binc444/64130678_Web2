@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import thiGK.ntu64130678.model.ListPostNPage;
 import thiGK.ntu64130678.model.Page;
+import thiGK.ntu64130678.model.Post;
 
 @Controller
 public class HomeController {
@@ -86,5 +87,37 @@ public class HomeController {
 
 	    return "redirect:/page/all";
 	}
+	
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * */
+	//Xử lý phần post
+	// Xử lý cho trang post-list
+	@GetMapping("/post/all")
+	public String getAllPosts(Model model) {
+	    List<Post> posts = ListPostNPage.getPosts();
+	    model.addAttribute("posts", posts);
+	    model.addAttribute("pageTitle", "Danh sách Post");
+	    return "post-list"; //
+	}
+	
+	// Hiển thị form thêm mới Post
+	@GetMapping("/post/new")
+	public String showCreatePostForm(Model model) {
+	    model.addAttribute("post", new Post(0, "", "", 0)); 
+	    model.addAttribute("pageTitle", "Thêm Post mới");
+	    return "post-form"; 
+	}
 
+	// Lưu Post vào danh sách tĩnh
+	@PostMapping("/post/save")
+	public String savePost(@ModelAttribute Post post) {
+	    int newId = ListPostNPage.getPosts().size() + 1;
+	    post.setId(newId);
+	    ListPostNPage.addPost(post); 
+	    return "redirect:/post/all";
+	}
 }
