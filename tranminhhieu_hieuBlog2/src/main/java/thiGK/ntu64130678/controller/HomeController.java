@@ -66,4 +66,25 @@ public class HomeController {
 	        return "redirect:/page/all"; // nếu không tìm thấy thì quay lại danh sách
 	    }
 	}
+	
+	//xử lý delete page
+	@GetMapping("/page/delete/{id}")
+	public String deletePage(@PathVariable("id") int id) {
+	    List<Page> pages = ListPostNPage.getPages();
+	    Page pageToDelete = null;
+
+	    for (Page p : pages) {
+	        if (p.getId() == id) {
+	            pageToDelete = p;
+	            break;
+	        }
+	    }
+
+	    if (pageToDelete != null) {
+	        pages.remove(pageToDelete); //xóa khỏi list
+	    }
+
+	    return "redirect:/page/all";
+	}
+
 }
