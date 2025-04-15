@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import thiGK.ntu64130678.model.ListPostNPage;
@@ -44,6 +45,25 @@ public class HomeController {
 	    ListPostNPage.addPage(page); // <-- lưu trong danh sách tĩnh
 	    return "redirect:/page/all";
 	}
-
-
+	
+	
+	// Xử lý khi nhấn view
+	@GetMapping("/page/view/{id}")
+	public String viewPage(@PathVariable("id") int id, Model model) {
+	    Page pageToView = null;
+	    for (Page p : ListPostNPage.getPages()) {
+	    	//Nếu tìm thấy Page có id đúng với id người dùng yêu cầu, gán nó vào biến pageToView
+	        if (p.getId() == id) {
+	            pageToView = p;
+	            break;
+	        }
+	    }
+	    if (pageToView != null) {
+	        model.addAttribute("page", pageToView); //Gửi pageToView vào Model để đưa sang Thymeleaf
+	        model.addAttribute("pageTitle", "Chi tiết Page");
+	        return "page-view"; // tên file HTML
+	    } else {
+	        return "redirect:/page/all"; // nếu không tìm thấy thì quay lại danh sách
+	    }
+	}
 }
