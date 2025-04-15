@@ -16,3 +16,4 @@ Thư mục `JavaSpringBoot` chứa các bài tập về **Java Spring Boot**. Cl
 - 📁 [Bài 2: Controller & View](https://github.com/binc444/64130678_Web2/tree/main/SB_TruyenDuLieuSangView)
 - 📁 [Bài 3: Làm quen với Fragment](https://github.com/binc444/64130678_Web2/tree/main/SB_Fragment)
 - 📁 [Bài 4: Bài tổng hợp ôn tập giữa kì](https://github.com/binc444/64130678_Web2/tree/main/TongHopGK)
+- 📁 [Bài tập tuần học số](https://github.com/binc444/64130678_Web2/tree/main/tranminhhieu_hieuBlog2)
