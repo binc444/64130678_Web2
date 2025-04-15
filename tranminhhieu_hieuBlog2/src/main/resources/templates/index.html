@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-</body>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:with="pageTitle='Trang chủ'">
+    <head th:replace="layout :: head"></head>
+    <body>
+        <div th:replace="layout :: layout(~{::#mainContent})">
+            <div id="mainContent">
+                <p><strong>Họ tên:</strong> Trần Minh Hiếu</p>
+                <p><strong>MSSV:</strong> 64130678</p>
+                <p><strong>Ngày sinh:</strong> 03/03/2004</p>
+                <p><strong>Giới tính:</strong> Nam</p>
+                <p><strong>Trường:</strong> Đại học Nha Trang</p>
+                <p><strong>Chuyên ngành:</strong> Công nghệ thông tin</p>
+            </div>
+        </div>
+    </body>
+</div>
 </html>
