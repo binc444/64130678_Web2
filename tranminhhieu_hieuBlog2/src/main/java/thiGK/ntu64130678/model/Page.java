@@ -14,7 +14,9 @@ public class Page {
         this.content = content;
         this.parentPageId = parentPageId;
     }
-
+    
+    public Page() {}
+    
     // Getters
     public int getId() {
         return id;

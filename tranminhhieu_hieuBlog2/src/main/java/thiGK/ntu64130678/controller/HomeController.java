@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import thiGK.ntu64130678.model.ListPostNPage;
 import thiGK.ntu64130678.model.Page;
@@ -25,4 +27,23 @@ public class HomeController {
         model.addAttribute("pageTitle", "Danh sách Page");
         return "page-list";
     }
+	
+	//Xử lý khi muốn thêm mới một page
+	@GetMapping("/page/new")
+	public String showCreatePageForm(Model model) {
+	    model.addAttribute("page", new Page(0, "", "", "", 0)); // ID tạm là 0
+	    model.addAttribute("pageTitle", "Thêm Page mới");
+	    return "page-form";
+	}
+	
+	// lưu page vào lớp Page
+	@PostMapping("/page/save")
+	public String savePage(@ModelAttribute Page page) {
+	    int newId = ListPostNPage.getPages().size() + 1;
+	    page.setId(newId);
+	    ListPostNPage.addPage(page); // <-- lưu trong danh sách tĩnh
+	    return "redirect:/page/all";
+	}
+
+
 }

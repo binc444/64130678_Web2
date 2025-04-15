@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head" th:with="pageTitle='Thêm Page mới'"></head>
+<body>
+<div th:replace="layout :: layout(~{::#mainContent})">
+    <div id="mainContent" class="container mt-4">
+        <h2 class="mb-3">Thêm Page mới</h2>
+        <form th:action="@{/page/save}" th:object="${page}" method="post">
+            <div class="mb-3">
+                <label class="form-label">Tên Page:</label>
+                <input type="text" class="form-control" th:field="*{pageName}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Keyword:</label>
+                <input type="text" class="form-control" th:field="*{keyword}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nội dung:</label>
+                <textarea class="form-control" th:field="*{content}" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Parent Page ID:</label>
+                <input type="number" class="form-control" th:field="*{parentPageId}">
+            </div>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a th:href="@{/page/all}" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>
