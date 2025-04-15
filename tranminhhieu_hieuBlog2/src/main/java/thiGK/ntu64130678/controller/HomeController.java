@@ -120,4 +120,45 @@ public class HomeController {
 	    ListPostNPage.addPost(post); 
 	    return "redirect:/post/all";
 	}
+	
+	//View post theo id
+	@GetMapping("/post/view/{id}")
+	public String viewPost(@PathVariable("id") int id, Model model) {
+	    Post postToView = null;
+	    for (Post p : ListPostNPage.getPosts()) {
+	        if (p.getId() == id) {
+	            postToView = p;
+	            break;
+	        }
+	    }
+
+	    if (postToView != null) {
+	        model.addAttribute("post", postToView); // Gửi post vào model
+	        model.addAttribute("pageTitle", "Chi tiết Bài viết");
+	        return "post-view"; 
+	    } else {
+	        return "redirect:/post/all"; // Nếu không tìm thấy thì quay lại danh sách
+	    }
+	}
+	
+	//Delete Post theo ID
+	@GetMapping("/post/delete/{id}")
+	public String deletePost(@PathVariable("id") int id) {
+	    List<Post> posts = ListPostNPage.getPosts();
+	    Post postToDelete = null;
+
+	    for (Post p : posts) {
+	        if (p.getId() == id) {
+	            postToDelete = p;
+	            break;
+	        }
+	    }
+
+	    if (postToDelete != null) {
+	        posts.remove(postToDelete); // Xóa post khỏi danh sách
+	    }
+
+	    return "redirect:/post/all";
+	}
+
 }
