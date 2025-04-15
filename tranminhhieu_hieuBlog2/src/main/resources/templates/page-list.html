@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head" th:with="pageTitle='Danh sách Page'"></head>
+<body>
+<div th:replace="layout :: layout(~{::#mainContent})">
+    <div id="mainContent">
+        <h2>Danh sách Page</h2>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Page</th>
+                    <th>Parent Page ID</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p : ${pages}">
+                    <td th:text="${p.id}"></td>
+                    <td th:text="${p.pageName}"></td>
+                    <td th:text="${p.parentPageId}"></td>
+                    <td>
+					    <a th:href="@{'/page/view/' + ${p.id}}" 
+					       class="btn btn-sm" 
+					       style="background-color: #28a745; color: white;">View</a>
+					
+					    <a th:href="@{'/page/edit/' + ${p.id}}" 
+					       class="btn btn-sm" 
+					       style="background-color: #ffc107; color: black;">Edit</a>
+					
+					    <a th:href="@{'/page/delete/' + ${p.id}}" 
+					       class="btn btn-sm" 
+					       style="background-color: #dc3545; color: white;">Delete</a>
+					</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -7,11 +7,11 @@ public class ListPostNPage {
 	public static List<Page> getPages() {
         List<Page> pages = new ArrayList<>();
 
-        pages.add(new Page(1, "Trang chủ", "trang-chu", "Chào mừng bạn đến với hệ thống quản lý nội dung", 0));
-        pages.add(new Page(2, "Giới thiệu môn học", "gioi-thieu-mon-hoc", "Môn Lập trình Web với Spring Boot - giúp bạn xây dựng ứng dụng web thực tế", 0));
-        pages.add(new Page(3, "Tài liệu học tập", "tai-lieu", "Danh sách các tài liệu, bài giảng, slide về môn học", 0));
+        pages.add(new Page(1, "Trang chủ", "trang-chu", "Chào mừng bạn đến với hệ thống quản lý nội dung", 1));
+        pages.add(new Page(2, "Giới thiệu môn học", "gioi-thieu-mon-hoc", "Môn Lập trình Web với Spring Boot - giúp bạn xây dựng ứng dụng web thực tế", 1));
+        pages.add(new Page(3, "Tài liệu học tập", "tai-lieu", "Danh sách các tài liệu, bài giảng, slide về môn học", 1));
         pages.add(new Page(4, "Java Spring Boot", "java-spring-boot", "Tổng quan về Spring Boot, cấu trúc project, dependency...", 3));
-        pages.add(new Page(5, "Liên hệ giảng viên", "lien-he", "Thông tin liên hệ với giảng viên phụ trách môn học", 0));
+        pages.add(new Page(5, "Liên hệ giảng viên", "lien-he", "Thông tin liên hệ với giảng viên phụ trách môn học", 1));
 
         return pages;
     }
