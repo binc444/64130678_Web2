@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} ?: 'Tin tức 24h'">Tin tức 24h</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom green theme -->
+    <style>
+        :root {
+            --main-green: #28a745;
+        }
+
+        body {
+            padding-top: 80px;
+        }
+
+        .navbar-custom {
+            background-color: var(--main-green);
+        }
+
+        .navbar-custom .nav-link,
+        .navbar-custom .navbar-brand {
+            color: #fff;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #d4f5db;
+        }
+
+        footer {
+            background-color: var(--main-green);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Layout fragment có tham số -->
+<div th:fragment="layout(content)">
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top" style="z-index: 10;">
+        <div class="container">
+            <a class="navbar-brand" href="#">Tin Tức 24h</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}">Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/tin-trong-nuoc}">Trong nước</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/tin-quoc-te}">Quốc tế</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/doi-song}">Đời sống</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/lien-he}">Liên hệ</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content (dynamic) -->
+    <main class="container mt-5 pt-5">
+        <div th:replace="${content}"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Tin Tức 24h. Bản quyền được bảo lưu.</p>
+        </div>
+    </footer>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

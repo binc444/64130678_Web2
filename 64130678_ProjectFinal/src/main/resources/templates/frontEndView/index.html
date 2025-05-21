@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-hi
-</body>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:with="pageTitle='Trang chủ'">
+    <head th:replace="frontEndView/layout :: head"></head>
+    <body>
+        <div th:replace="frontEndView/layout :: layout(~{::#mainContent})">
+            <div id="mainContent">
+                <h1 class="text-success">Trang chủ</h1>
+                <p>Chào mừng bạn đến với trang web tin tức.</p>
+            </div>
+        </div>
+    </body>
+</div>
 </html>
