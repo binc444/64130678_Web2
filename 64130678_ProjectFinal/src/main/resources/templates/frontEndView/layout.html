@@ -48,17 +48,69 @@
     <!-- Header -->
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top" style="z-index: 10;">
         <div class="container">
-            <a class="navbar-brand" href="#">Tin Tức 24h</a>
+            <a class="navbar-brand" th:href="@{/}">
+			    <img th:src="@{/images/logos/news247.png}" alt="News247 Logo" style="height: 55px;">
+			</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/}">Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/tin-trong-nuoc}">Trong nước</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/tin-quoc-te}">Quốc tế</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/doi-song}">Đời sống</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/lien-he}">Liên hệ</a></li>
+                    <li class="nav-item">
+					    <a class="nav-link d-flex align-items-center" th:href="@{/}">
+					        <img th:src="@{/images/icons/location.svg}" alt="Icon Trong nước"
+					             style="height: 20px; margin-right: 6px;">
+					        Trong nước
+					    </a>
+					</li>
+                    <li class="nav-item">
+					    <a class="nav-link d-flex align-items-center" th:href="@{/}">
+					        <img th:src="@{/images/icons/earth.svg}" alt="Icon quoc te"
+					             style="height: 20px; margin-right: 6px;">
+					        Quốc tế
+					    </a>
+					</li>
+
+                    <li class="nav-item">
+					    <a class="nav-link d-flex align-items-center" th:href="@{/}">
+					        <img th:src="@{/images/icons/mask.svg}" alt="Icon giai tri"
+					             style="height: 20px; margin-right: 6px;">
+					        Giải trí
+					    </a>
+					</li>
+
+                    <li class="nav-item">
+					    <a class="nav-link d-flex align-items-center" th:href="@{/}">
+					        <img th:src="@{/images/icons/school.svg}" alt="Icon Trong nước"
+					             style="height: 20px; margin-right: 6px;">
+					        Giáo dục
+					    </a>
+					</li>
+
+                    <li class="nav-item">
+					    <a class="nav-link d-flex align-items-center" th:href="@{/}">
+					        <img th:src="@{/images/icons/location.svg}" alt="Icon đời sống"
+					             style="height: 20px; margin-right: 6px;">
+					        Đời sống
+					    </a>
+					</li>
+
+                    <li class="nav-item">
+					    <a class="nav-link d-flex align-items-center" th:href="@{/}">
+					        <img th:src="@{/images/icons/sport.svg}" alt="Icon thể thao"
+					             style="height: 20px; margin-right: 6px;">
+					        Thể thao
+					    </a>
+					</li>
+
+                    <li class="nav-item">
+					    <a class="nav-link d-flex align-items-center" th:href="@{/}">
+					        <img th:src="@{/images/icons/phone.svg}" alt="Icon liên hệ"
+					             style="height: 20px; margin-right: 6px;">
+					        liên hệ
+					    </a>
+					</li>
+
                 </ul>
             </div>
         </div>
@@ -72,7 +124,7 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2025 Tin Tức 24h. Bản quyền được bảo lưu.</p>
+            <p>&copy; 2025. Toàn bộ bản quyền thuộc News247-Trần Minh Hiếu</p>
         </div>
     </footer>
 </div>
