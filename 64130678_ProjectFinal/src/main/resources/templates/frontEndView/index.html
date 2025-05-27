@@ -1,13 +1,24 @@
+<!-- frontEndView/index.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <div th:with="pageTitle='Trang chủ'">
     <head th:replace="frontEndView/layout :: head"></head>
     <body>
         <div th:replace="frontEndView/layout :: layout(~{::#mainContent})">
-            <div id="mainContent">
-                <h1 class="text-success">Trang chủ</h1>
-                <p>Chào mừng bạn đến với trang web tin tức.</p>
-            </div>
+            <div id="mainContent" th:fragment="mainContent">
+			    <h1 class="text-success">Trang chủ</h1>
+			    <p>Chào mừng bạn đến với trang web tin tức.</p>
+			
+			    <ul class="list-group">
+				    <li class="list-group-item d-flex justify-content-between align-items-center"
+				        th:each="article : ${articles}">
+				        <span th:text="${article.title}">Tiêu đề bài viết</span>
+				        <small class="text-muted" th:text="${#temporals.format(article.publicationDate, 'HH:mm dd/MM/yyyy')}"></small>
+				    </li>
+				</ul>
+
+			</div>
+
         </div>
     </body>
 </div>

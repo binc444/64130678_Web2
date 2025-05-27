@@ -2,42 +2,32 @@ package ntu.tmhieu.Model;
 
 import jakarta.persistence.*;
 
-enum ReactionType {
-    LIKE, VUI, BUON
-}
-
 @Entity
 @Table(name = "reactions")
 public class Reaction {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reaction_id")
-    private Integer reactionId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id", nullable = false)
-    private Article article;
+    private Integer reaction_id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "reaction_type", nullable = false)
     private ReactionType reactionType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id", nullable = false)
+    private Article article;
+
+    public enum ReactionType {
+        LIKE, VUI, BUON
+    }
+
     // Getters and Setters
-    public Integer getReactionId() {
-        return reactionId;
+    public Integer getReaction_id() {
+        return reaction_id;
     }
 
-    public void setReactionId(Integer reactionId) {
-        this.reactionId = reactionId;
-    }
-
-    public Article getArticle() {
-        return article;
-    }
-
-    public void setArticle(Article article) {
-        this.article = article;
+    public void setReaction_id(Integer reaction_id) {
+        this.reaction_id = reaction_id;
     }
 
     public ReactionType getReactionType() {
@@ -46,5 +36,13 @@ public class Reaction {
 
     public void setReactionType(ReactionType reactionType) {
         this.reactionType = reactionType;
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
     }
 }
