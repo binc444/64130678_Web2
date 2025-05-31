@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import ntu.tmhieu.Model.Article;
 import ntu.tmhieu.Model.Image;
+import ntu.tmhieu.Repository.ArticleRepository;
 import ntu.tmhieu.Repository.ImageRepository;
 import ntu.tmhieu.Service.ArticleService;
 
@@ -25,11 +26,19 @@ public class HomeController {
 
     @Autowired
     private ImageRepository imageRepository;
+    
+    @Autowired
+    private ArticleRepository articleRepository;
 
     @GetMapping("/")
     public String home(Model model) {
-        List<Article> articles = articleService.getAllArticles();
+    	List<Article> articles = articleService.getAllArticles();
         model.addAttribute("articles", articles);
+
+        // Lấy 5 bài viết mới nhất
+        List<Article> latestArticles = articleRepository.findTop5ByOrderByPublicationDateDesc();
+        model.addAttribute("latestArticles", latestArticles);
+
         return "frontEndView/index";
     }
 

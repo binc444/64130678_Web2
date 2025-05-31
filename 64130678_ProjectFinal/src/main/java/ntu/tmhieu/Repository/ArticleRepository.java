@@ -1,8 +1,12 @@
 package ntu.tmhieu.Repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import ntu.tmhieu.Model.Article;
 
 
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
+	// Sắp xếp bài viết theo publicationDate giảm dần và giới hạn số lượng
+    List<Article> findTop5ByOrderByPublicationDateDesc();
 }

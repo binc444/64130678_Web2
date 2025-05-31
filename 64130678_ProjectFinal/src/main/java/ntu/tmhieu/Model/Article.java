@@ -111,4 +111,20 @@ public class Article {
                      .findFirst()
                      .orElse(null);
     }
+    
+    public String getShortContent(int maxLength) {
+        if (content == null || content.isEmpty()) {
+            return "";
+        }
+        // Loại bỏ HTML tags để tóm tắt nội dung không bị ảnh hưởng bởi định dạng
+        String plainTextContent = content.replaceAll("<[^>]*>", "");
+        if (plainTextContent.length() <= maxLength) {
+            return plainTextContent;
+        }
+        return plainTextContent.substring(0, maxLength) + "...";
+    }
+
+    public String getShortContent() {
+        return getShortContent(150); // Mặc định 150 ký tự
+    }
 }
