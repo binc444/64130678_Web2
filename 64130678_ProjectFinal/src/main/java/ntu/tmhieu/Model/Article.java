@@ -1,8 +1,7 @@
 package ntu.tmhieu.Model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.time.LocalDateTime; //để sử dụng kiểu dữ liệu thời gian
 
 @Entity
 @Table(name = "articles")
@@ -19,32 +18,35 @@ public class Article {
     @Column(name = "publication_date")
     private LocalDateTime publicationDate;
 
+    // Cờ boolean cho biết bài viết có phải là tin quốc tế hay không
     @Column(name = "is_international")
     private boolean isInternational;
-
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    // Quan hệ OneToMany với Image: một bài viết có nhiều ảnh
-    // mappedBy trỏ đến tên thuộc tính "article" trong class Image
-    // cascade = CascadeType.ALL để các thao tác với Article cũng áp dụng cho Images liên quan
-    // orphanRemoval = true để xóa ảnh khi không còn liên kết với bài viết
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Image> images;
+    @Column(name = "thumbnail_image_data", columnDefinition = "MEDIUMBLOB")
+    private byte[] thumbnailImageData;
+
+    // Kiểu MIME của ảnh thumbnail
+    @Column(name = "thumbnail_mime_type")
+    private String thumbnailMimeType;
 
     public Article() {
     }
-
-    public Article(String title, String content, LocalDateTime publicationDate, boolean isInternational, Category category) {
+    public Article(String title, String content, LocalDateTime publicationDate, boolean isInternational, Category category, byte[] thumbnailImageData, String thumbnailMimeType) {
         this.title = title;
         this.content = content;
         this.publicationDate = publicationDate;
         this.isInternational = isInternational;
         this.category = category;
+        this.thumbnailImageData = thumbnailImageData;
+        this.thumbnailMimeType = thumbnailMimeType;
     }
 
-    // Getters, Setters
+    // --- Getters và Setters cho tất cả các thuộc tính ---
+    
     public Integer getArticleId() {
         return articleId;
     }
@@ -93,37 +95,45 @@ public class Article {
         this.category = category;
     }
 
-    public List<Image> getImages() {
-        return images;
+    public byte[] getThumbnailImageData() {
+        return thumbnailImageData;
     }
 
-    public void setImages(List<Image> images) {
-        this.images = images;
+    public void setThumbnailImageData(byte[] thumbnailImageData) {
+        this.thumbnailImageData = thumbnailImageData;
     }
 
-    // Phương thức tiện ích để lấy ảnh thumbnail
-    public Image getThumbnailImage() {
-        if (images == null || images.isEmpty()) {
-            return null;
-        }
-        return images.stream()
-                     .filter(Image::isThumbnail) // Sử dụng method reference
-                     .findFirst()
-                     .orElse(null);
+    public String getThumbnailMimeType() {
+        return thumbnailMimeType;
     }
-    
+
+    public void setThumbnailMimeType(String thumbnailMimeType) {
+        this.thumbnailMimeType = thumbnailMimeType;
+    }
+
+    /**
+     * Phương thức tiện ích để lấy một đoạn trích ngắn từ nội dung bài viết.
+     * Loại bỏ các thẻ HTML để chỉ lấy văn bản thuần túy.
+     * @param maxLength Chiều dài tối đa của đoạn trích.
+     * @return Đoạn trích văn bản.
+     */
     public String getShortContent(int maxLength) {
         if (content == null || content.isEmpty()) {
             return "";
         }
-        // Loại bỏ HTML tags để tóm tắt nội dung không bị ảnh hưởng bởi định dạng
+        // Loại bỏ tất cả các thẻ HTML để có văn bản thuần túy
         String plainTextContent = content.replaceAll("<[^>]*>", "");
         if (plainTextContent.length() <= maxLength) {
             return plainTextContent;
         }
+        // Trả về đoạn trích và thêm dấu "..."
         return plainTextContent.substring(0, maxLength) + "...";
     }
 
+    /**
+     * Phương thức tiện ích để lấy đoạn trích ngắn với chiều dài mặc định là 150 ký tự.
+     * @return Đoạn trích văn bản.
+     */
     public String getShortContent() {
         return getShortContent(150); // Mặc định 150 ký tự
     }

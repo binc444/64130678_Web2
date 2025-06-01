@@ -6,6 +6,8 @@
     <title th:text="${pageTitle} ?: 'Tin tức 24h'">Tin tức 24h</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <style>
         :root {
@@ -15,7 +17,7 @@
 
         body {
             padding-top: 80px;
-            background-color: #f8f9fa;
+            background-color: #f8f9fa; /* Màu nền nhẹ nhàng */
         }
 
         .navbar-custom {
@@ -39,13 +41,13 @@
             margin-top: 40px;
         }
 
-        /* --- CSS CHO CÁC CARD BÀI VIẾT CHÍNH --- */
+        /* --- CSS CHO CÁC CARD BÀI VIẾT CHÍNH TRANG INDEX --- */
         .card-img-top-wrapper {
             width: 100%;
-            padding-top: 56.25%;
+            padding-top: 56.25%; /* Tỷ lệ 16:9 (chiều cao = 56.25% chiều rộng) */
             position: relative;
             overflow: hidden;
-            background-color: #f0f0f0;
+            background-color: #f0f0f0; /* Màu nền khi không có ảnh */
         }
 
         .card-img-top-wrapper .article-thumbnail,
@@ -85,7 +87,7 @@
             color: white;
         }
 
-        /* --- CSS CHO SIDEBAR --- */
+        /* --- CSS MỚI CHO SIDEBAR --- */
         .latest-article-item {
             display: flex;
             align-items: center;
@@ -124,6 +126,51 @@
                 margin-top: 1.5rem !important;
             }
         }
+
+        /* --- CSSCHO TRANG CHI TIẾT BÀI VIẾT --- */
+        .article-detail-image-block {
+            /* Đảm bảo ảnh trong block nội dung luôn responsive và căn giữa */
+            text-align: center;
+        }
+        .article-detail-image-block img {
+            max-width: 100%;
+            height: auto;
+            display: inline-block; /* Để căn giữa */
+            margin: 1rem auto;
+            border-radius: 5px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,.075);
+            object-fit: contain; /* Đảm bảo ảnh hiển thị toàn bộ mà không bị cắt */
+            max-height: 500px; /* Giới hạn chiều cao cho ảnh lớn */
+        }
+
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .article-content p {
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar-extra-margin-top {
+            margin-top: 80px !important;
+        }
+        @media (min-width: 992px) {
+            .sidebar-extra-margin-top {
+                 margin-top: 80px !important;
+            }
+        }
+
+        /* Emotion buttons */
+        .emotion-button {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .emotion-button.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+
     </style>
 </head>
 
