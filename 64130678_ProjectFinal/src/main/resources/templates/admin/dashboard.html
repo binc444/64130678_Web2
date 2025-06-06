@@ -72,6 +72,23 @@
         .navbar-brand img {
             vertical-align: middle;
         }
+        /* Style cho các cột có thể click để sắp xếp */
+        .sortable-header {
+            cursor: pointer;
+            position: relative;
+            padding-right: 20px; /* Thêm khoảng trống cho biểu tượng mũi tên */
+        }
+        .sortable-header .sort-icon {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            opacity: 0.6; /* Làm mờ biểu tượng khi không active */
+        }
+        .sortable-header.active .sort-icon {
+            opacity: 1; /* Làm rõ biểu tượng khi active */
+        }
     </style>
 </head>
 <body>
@@ -91,7 +108,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#"><i class="bi bi-person-circle"></i> Trần Minh Hiếu</a>
                 </li>
-                </ul>
+            </ul>
         </div>
     </div>
 </nav>
@@ -132,18 +149,36 @@
                 <div class="tab-content" id="adminTabsContent">
                     <div class="tab-pane fade show active" id="articles-tab" role="tabpanel" aria-labelledby="articles-tab-btn">
                         <h2>Quản lý Bài viết</h2>
-                        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#articleModal"
-                                data-mode="add"><i class="bi bi-plus-circle me-2"></i>Thêm Bài viết</button>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#articleModal"
+                                    data-mode="add"><i class="bi bi-plus-circle me-2"></i>Thêm Bài viết</button>
+                        </div>
 
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered">
                                 <thead class="table-light">
                                 <tr>
-                                    <th>ID</th>
+                                    <th class="sortable-header" data-sort-by="articleId">
+                                        ID
+                                        <i class="bi sort-icon"
+                                           th:classappend="${sortBy == 'articleId' ? (sortOrder == 'asc' ? 'bi-arrow-up' : 'bi-arrow-down') : 'bi-dash'}"></i>
+                                    </th>
                                     <th>Tiêu đề</th>
-                                    <th>Ngày xuất bản</th>
-                                    <th>Thể loại</th>
-                                    <th>Quốc tế</th>
+                                    <th class="sortable-header" data-sort-by="publicationDate">
+                                        Ngày xuất bản
+                                        <i class="bi sort-icon"
+                                           th:classappend="${sortBy == 'publicationDate' ? (sortOrder == 'asc' ? 'bi-arrow-up' : 'bi-arrow-down') : 'bi-dash'}"></i>
+                                    </th>
+                                    <th class="sortable-header" data-sort-by="category.name">
+                                        Thể loại
+                                        <i class="bi sort-icon"
+                                           th:classappend="${sortBy == 'category.name' ? (sortOrder == 'asc' ? 'bi-arrow-up' : 'bi-arrow-down') : 'bi-dash'}"></i>
+                                    </th>
+                                    <th class="sortable-header" data-sort-by="isInternational">
+                                        Quốc tế
+                                        <i class="bi sort-icon"
+                                           th:classappend="${sortBy == 'isInternational' ? (sortOrder == 'asc' ? 'bi-arrow-up' : 'bi-arrow-down') : 'bi-dash'}"></i>
+                                    </th>
                                     <th>Hành động</th>
                                 </tr>
                                 </thead>
@@ -226,7 +261,7 @@
                         <select class="form-select" id="articleCategory" name="categoryId" required>
                             <option value="">-- Chọn thể loại --</option>
                             <option th:each="cat : ${categories}" th:value="${cat.categoryId}" th:text="${cat.name}"></option>
-                            </select>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="articleImage" class="form-label">Ảnh Thumbnail</label>
@@ -307,9 +342,9 @@
                         document.getElementById('articleTitle').value = data.title;
                         document.getElementById('articleContent').value = data.content;
                         document.getElementById('isInternational').checked = data.international;
-                        document.getElementById('articleCategory').value = data.category.categoryId;n
+                        document.getElementById('articleCategory').value = data.category ? data.category.categoryId : "";
 
-                        if (data.thumbnailImageData) {
+                        if (data.thumbnailImageData && data.thumbnailMimeType) {
                             currentArticleImagePreview.src = 'data:' + data.thumbnailMimeType + ';base64,' + data.thumbnailImageData;
                             currentArticleImagePreview.style.display = 'block';
                         }
@@ -343,6 +378,53 @@
                     .catch(error => console.error('Lỗi khi lấy dữ liệu danh mục:', error));
             }
         });
+
+        // --- JavaScript cho chức năng sắp xếp bằng cách click vào header cột ---
+        const sortableHeaders = document.querySelectorAll('.sortable-header');
+
+        sortableHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const sortBy = this.getAttribute('data-sort-by');
+                const urlParams = new URLSearchParams(window.location.search);
+                let currentSortBy = urlParams.get('sortBy');
+                let currentSortOrder = urlParams.get('sortOrder');
+
+                let newSortOrder = 'asc'; // Mặc định là tăng dần cho cột mới click vào
+
+                if (currentSortBy === sortBy) {
+                    // Nếu đang sắp xếp theo cột này, đảo ngược thứ tự
+                    newSortOrder = (currentSortOrder === 'asc' ? 'desc' : 'asc');
+                } else {
+                    // Nếu sắp xếp theo cột mới, thứ tự mặc định là tăng dần
+                    newSortOrder = 'asc'; // Hoặc 'desc' nếu bạn muốn ID/Ngày mặc định giảm dần
+                }
+
+                // Chuyển hướng đến URL mới với các tham số sắp xếp
+                window.location.href = `/admin/dashboard?sortBy=${sortBy}&sortOrder=${newSortOrder}`;
+            });
+        });
+
+        // Highlight active sort header và hiển thị mũi tên khi trang được tải
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeSortBy = urlParams.get('sortBy');
+        const activeSortOrder = urlParams.get('sortOrder');
+
+        if (activeSortBy) {
+            const activeHeader = document.querySelector(`.sortable-header[data-sort-by="${activeSortBy}"]`);
+            if (activeHeader) {
+                activeHeader.classList.add('active');
+                const icon = activeHeader.querySelector('.sort-icon');
+                if (icon) {
+                    if (activeSortOrder === 'asc') {
+                        icon.classList.remove('bi-arrow-down', 'bi-dash');
+                        icon.classList.add('bi-arrow-up');
+                    } else {
+                        icon.classList.remove('bi-arrow-up', 'bi-dash');
+                        icon.classList.add('bi-arrow-down');
+                    }
+                }
+            }
+        }
     });
 </script>
 
