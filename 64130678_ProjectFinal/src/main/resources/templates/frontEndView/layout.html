@@ -33,6 +33,14 @@
             color: #d4f5db;
         }
 
+        /* Thêm CSS cho liên kết danh mục đang hoạt động */
+        .active-category-link {
+            font-weight: bold;
+            color: #cceeff !important; /* Màu sáng hơn để nổi bật */
+            border-bottom: 2px solid #fff; /* Hoặc gạch chân */
+            padding-bottom: 5px; /* Điều chỉnh để gạch chân không quá sát chữ */
+        }
+
         footer {
             background-color: var(--main-green);
             color: white;
@@ -152,7 +160,7 @@
         .article-content p {
             margin-bottom: 1rem;
         }
-        
+
         .sidebar-extra-margin-top {
             margin-top: 80px !important;
         }
@@ -187,60 +195,31 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" th:href="@{/}">
-                                <img th:src="@{/images/icons/location.svg}" alt="Icon Trong nước"
-                                     style="height: 20px; margin-right: 6px;">
-                                Trong nước
+                            <a class="nav-link d-flex align-items-center" th:href="@{/}"
+                               th:classappend="${currentCategoryId == null ? 'active-category-link' : ''}">
+                                <i class="bi bi-list me-2"></i> Tất cả
+                            </a>
+                        </li>
+                        <li class="nav-item" th:each="category : ${categories}">
+                            <a class="nav-link d-flex align-items-center"
+                               th:href="@{/(categoryId=${category.categoryId})}"
+                               th:classappend="${currentCategoryId != null and currentCategoryId == category.categoryId ? 'active-category-link' : ''}">
+                                <img th:if="${category.name == 'Trong nước'}" th:src="@{/images/icons/location.svg}" alt="Icon Trong nước" style="height: 20px; margin-right: 6px;">
+                                <img th:if="${category.name == 'Quốc tế'}" th:src="@{/images/icons/earth.svg}" alt="Icon Quốc tế" style="height: 20px; margin-right: 6px;">
+                                <img th:if="${category.name == 'Giải trí'}" th:src="@{/images/icons/mask.svg}" alt="Icon Giải trí" style="height: 20px; margin-right: 6px;">
+                                <img th:if="${category.name == 'Giáo dục'}" th:src="@{/images/icons/school.svg}" alt="Icon Giáo dục" style="height: 20px; margin-right: 6px;">
+                                <img th:if="${category.name == 'Đời sống'}" th:src="@{/images/icons/life.svg}" alt="Icon Đời sống" style="height: 20px; margin-right: 6px;">
+                                <img th:if="${category.name == 'Thể thao'}" th:src="@{/images/icons/sport.svg}" alt="Icon Thể thao" style="height: 20px; margin-right: 6px;">
+                                <span th:text="${category.name}">Tên Danh mục</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" th:href="@{/}">
-                                <img th:src="@{/images/icons/earth.svg}" alt="Icon quoc te"
-                                     style="height: 20px; margin-right: 6px;">
-                                Quốc tế
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" th:href="@{/}">
-                                <img th:src="@{/images/icons/mask.svg}" alt="Icon giai tri"
-                                     style="height: 20px; margin-right: 6px;">
-                                Giải trí
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" th:href="@{/}">
-                                <img th:src="@{/images/icons/school.svg}" alt="Icon Trong nước"
-                                     style="height: 20px; margin-right: 6px;">
-                                Giáo dục
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" th:href="@{/}">
-                                <img th:src="@{/images/icons/location.svg}" alt="Icon đời sống"
-                                     style="height: 20px; margin-right: 6px;">
-                                Đời sống
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" th:href="@{/}">
-                                <img th:src="@{/images/icons/sport.svg}" alt="Icon thể thao"
-                                     style="height: 20px; margin-right: 6px;">
-                                Thể thao
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" th:href="@{/}">
+                            <a class="nav-link d-flex align-items-center" th:href="@{/contact}">
                                 <img th:src="@{/images/icons/phone.svg}" alt="Icon liên hệ"
                                      style="height: 20px; margin-right: 6px;">
-                                liên hệ
+                                Liên hệ
                             </a>
                         </li>
-
                     </ul>
                 </div>
             </div>

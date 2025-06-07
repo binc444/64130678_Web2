@@ -25,58 +25,78 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import ntu.tmhieu.Model.Article;
+import ntu.tmhieu.Model.Category;
 import ntu.tmhieu.Model.Reaction;
 import ntu.tmhieu.Repository.ArticleRepository;
+import ntu.tmhieu.Repository.CategoryRepository;
 import ntu.tmhieu.Repository.ReactionRepository;
 import ntu.tmhieu.Service.ArticleService;
 
 @Controller
 public class HomeController {
 
-    // Inject Service để tương tác với logic nghiệp vụ bài viết (nếu có)
     @Autowired
     private ArticleService articleService;
 
-    // Inject Repository để tương tác trực tiếp với dữ liệu bài viết
     @Autowired
     private ArticleRepository articleRepository;
 
-    // Inject Repository để tương tác với dữ liệu về cảm xúc (reactions)
     @Autowired
     private ReactionRepository reactionRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository; // Đảm bảo đã inject CategoryRepository
+
     /**
      * Hiển thị trang chủ của ứng dụng với chức năng phân trang.
-     * Lấy danh sách bài viết theo trang và kích thước trang, sắp xếp theo ngày xuất bản mới nhất.
-     * Đồng thời lấy 5 bài viết mới nhất để hiển thị trong sidebar.
+     * Lấy danh sách bài viết theo trang và kích thước trang, sắp xếp theo ID mới nhất khi không có lọc danh mục.
+     * Khi có lọc danh mục, sắp xếp theo ID mới nhất trong danh mục đó.
+     * Đồng thời lấy 5 bài viết mới nhất (tổng quát) để hiển thị trong sidebar.
      * @param model Đối tượng Model để truyền dữ liệu tới view.
      * @param page Số trang hiện tại (mặc định là 0).
      * @param size Số lượng bài viết trên mỗi trang (mặc định là 6).
+     * @param categoryId ID của danh mục để lọc bài viết (Optional).
      * @return Tên view của trang chủ.
      */
     @GetMapping("/")
     public String home(
-            Model model,
-            @RequestParam(defaultValue = "0") int page, // Trang hiện tại (0-indexed)
-            @RequestParam(defaultValue = "6") int size) { // Số bài viết mỗi trang
+    		Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size,
+            @RequestParam(required = false) Integer categoryId) {
 
-        // Tạo đối tượng Pageable để phân trang và sắp xếp.
-        // Sắp xếp theo "publicationDate" giảm dần (mới nhất trước)
+        // Sắp xếp theo ID giảm dần (ID lớn nhất hiện trước)
     	Pageable pageable = PageRequest.of(page, size, Sort.by("articleId").ascending());
 
-        // Lấy trang bài viết từ ArticleService
-        Page<Article> articlePage = articleService.getArticlesPaginated(pageable);
+        Page<Article> articlePage;
+        String currentCategoryName = "Tất cả bài viết"; // Mặc định là "Tất cả bài viết"
+
+        // Logic để lọc bài viết theo categoryId
+        if (categoryId != null) {
+            articlePage = articleService.getArticlesByCategoryPaginated(categoryId, pageable);
+            // Lấy tên category để hiển thị
+            categoryRepository.findById(categoryId).ifPresent(category -> {
+                model.addAttribute("currentCategoryName", category.getName());
+            });
+        } else {
+            // Nếu không có categoryId, lấy tất cả bài viết và sắp xếp theo ID giảm dần
+            articlePage = articleService.getArticlesPaginated(pageable);
+            model.addAttribute("currentCategoryName", currentCategoryName); // Đặt tên mặc định
+        }
 
         // Truyền dữ liệu phân trang vào Model
-        model.addAttribute("articles", articlePage.getContent()); // Danh sách bài viết cho trang hiện tại
-        model.addAttribute("articlePage", articlePage);           // Đối tượng Page để dùng trong Thymeleaf (tổng số trang, v.v.)
-        model.addAttribute("currentPage", page);                  // Trang hiện tại (để active nút phân trang)
-        model.addAttribute("pageSize", size);                     // Kích thước trang hiện tại
+        model.addAttribute("articles", articlePage.getContent());
+        model.addAttribute("articlePage", articlePage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("currentCategoryId", categoryId); // Truyền categoryId hiện tại để giữ trạng thái phân trang
 
-        // Lấy 5 bài viết mới nhất để hiển thị trong sidebar hoặc phần nổi bật
-        // (Đây là một danh sách riêng, không phân trang, chỉ lấy 5 bài)
+        // Lấy 5 bài viết mới nhất để hiển thị trong sidebar
         List<Article> latestArticles = articleRepository.findTop5ByOrderByPublicationDateDesc();
         model.addAttribute("latestArticles", latestArticles);
+
+        // Lấy tất cả các danh mục để tạo menu động trong header
+        model.addAttribute("categories", categoryRepository.findAll());
 
         return "frontEndView/index";
     }
@@ -130,6 +150,10 @@ public class HomeController {
         // Lấy 5 bài viết mới nhất cho sidebar (hiển thị trên trang chi tiết)
         List<Article> latestArticles = articleRepository.findTop5ByOrderByPublicationDateDesc();
         model.addAttribute("latestArticles", latestArticles);
+
+        // Thêm tất cả các danh mục vào model để menu header hoạt động
+        model.addAttribute("categories", categoryRepository.findAll());
+
 
         return "frontEndView/article-detail";
     }
@@ -216,5 +240,17 @@ public class HomeController {
 
         // Trả về số lượt đếm mới dưới dạng JSON
         return ResponseEntity.ok(Map.of("likes", updatedLikes, "happy", updatedHappy, "sad", updatedSad));
+    }
+
+    /**
+     * Hiển thị trang liên hệ.
+     * @param model Đối tượng Model để truyền dữ liệu tới view.
+     * @return Tên view của trang liên hệ.
+     */
+    @GetMapping("/contact")
+    public String contact(Model model) {
+        model.addAttribute("pageTitle", "Liên hệ với chúng tôi");
+        model.addAttribute("categories", categoryRepository.findAll());
+        return "frontEndView/contact";
     }
 }

@@ -12,19 +12,26 @@ import ntu.tmhieu.Repository.ArticleRepository;
 
 @Service
 public class ArticleService {
-	@Autowired
+    @Autowired
     private ArticleRepository articleRepository;
 
     public List<Article> getAllArticles() {
         return articleRepository.findAll();
     }
 
-    // Phương thức mới cho phân trang và sắp xếp
     public Page<Article> getArticlesPaginated(Pageable pageable) {
         return articleRepository.findAll(pageable);
     }
 
+    public Page<Article> getArticlesByCategoryPaginated(Integer categoryId, Pageable pageable) {
+        return articleRepository.findByCategoryCategoryId(categoryId, pageable);
+    }
+
     public void deleteArticle(Integer id) {
         articleRepository.deleteById(id);
+    }
+
+    public Article getArticleById(Integer id) {
+        return articleRepository.findById(id).orElse(null);
     }
 }

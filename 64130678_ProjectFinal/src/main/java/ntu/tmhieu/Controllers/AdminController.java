@@ -101,10 +101,16 @@ public class AdminController {
         Optional<Article> articleOptional = articleRepository.findById(id);
         if (articleOptional.isPresent()) {
             Article article = articleOptional.get();
-            // Đảm bảo category không null để tránh lỗi khi render form
             if (article.getCategory() == null) {
                 article.setCategory(new Category());
             }
+
+            if (article.getThumbnailImageData() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(article.getThumbnailImageData());
+                // Thêm vào model để Thymeleaf có thể sử dụng
+                model.addAttribute("currentThumbnailImageBase64", base64Image);
+            }
+
             model.addAttribute("article", article);
             model.addAttribute("categories", categoryRepository.findAll());
             return "admin/article-form";

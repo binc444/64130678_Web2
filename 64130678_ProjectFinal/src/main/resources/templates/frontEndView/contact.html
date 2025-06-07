@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="frontEndView/layout :: head"></head>
+<body>
+    <div th:replace="frontEndView/layout :: layout(~{::#mainContent})">
+        <div id="mainContent" th:fragment="mainContent">
+            <div class="container my-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-primary text-white text-center py-3">
+                                <h3 class="mb-0">Liên hệ với chúng tôi</h3>
+                            </div>
+                            <div class="card-body p-4">
+                                <p class="lead text-center mb-4">Chúng tôi luôn sẵn lòng lắng nghe ý kiến và trả lời các câu hỏi của bạn. Vui lòng điền vào biểu mẫu dưới đây hoặc liên hệ trực tiếp qua thông tin sau:</p>
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6 text-center">
+                                        <h5 class="text-primary"><i class="bi bi-geo-alt-fill me-2"></i>Địa chỉ</h5>
+                                        <p>2 Đ. Nguyễn Đình Chiểu, Vĩnh Thọ, Nha Trang, Khánh Hòa 650000</p>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <h5 class="text-primary"><i class="bi bi-telephone-fill me-2"></i>Điện thoại</h5>
+                                        <p>+84 348 985 087</p>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-6 text-center">
+                                        <h5 class="text-primary"><i class="bi bi-envelope-fill me-2"></i>Email</h5>
+                                        <p>hieu.tmi.64cntt@ntu.edu.vn</a></p>
+                                    </div>
+                                    </div>
+
+                                <hr class="my-4">
+
+                                <h4 class="text-center mb-4">Tìm chúng tôi trên bản đồ</h4>
+                                <div class="ratio ratio-16x9 mb-4">
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.0120636327906!2d109.19979561064335!3d12.268143687936178!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317067ed3a052f11%3A0xd464ee0a6e53e8b7!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBOaGEgVHJhbmc!5e1!3m2!1svi!2s!4v1749265712003!5m2!1svi!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                </div>
+                                <h4 class="text-center mb-4">Gửi tin nhắn cho chúng tôi</h4>
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Họ và tên</label>
+                                        <input type="text" class="form-control" id="name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="subject" class="form-label">Chủ đề</label>
+                                        <input type="text" class="form-control" id="subject">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="message" class="form-label">Nội dung tin nhắn</label>
+                                        <textarea class="form-control" id="message" rows="5" required></textarea>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary btn-lg">Gửi tin nhắn</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
