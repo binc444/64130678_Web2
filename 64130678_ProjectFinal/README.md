@@ -1,3 +1,6 @@
+# Giới thiệu:
+Là một website tin tức đơn giản được phát triển bằng Java Spring Boot, đề tài là các bài viết tin tức với nhiều danh mục khác nhau (Công nghệ, Thể thao, Giáo dục), bao gồm cả tin trong nước và quốc tế. Ngoài chức năng đọc tin, người dùng còn có thể tương tác với bài viết thông qua việc thả cảm xúc như "Like", "Vui", "Buồn", giúp tạo nên một trải nghiệm thân thiện và sinh động.
+
 ### Giao diện trang chủ:
 ![Image](https://github.com/user-attachments/assets/1050d23c-b6bb-43e6-a999-1ce2a6559d38)
 
