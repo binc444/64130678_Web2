@@ -14,7 +14,7 @@
                                 <small th:text="${#temporals.format(article.publicationDate, 'HH:mm dd/MM/yyyy')}"></small>
                                 <span class="mx-2">•</span>
                                 <small>Thể loại: <span th:text="${article.category?.name ?: 'Chưa phân loại'}">Thể loại</span></small>
-                                <span class="ms-auto"><small th:if="${article.international}" class="badge bg-info">Quốc tế</small></span>
+                                <span class="ms-auto"><small th:if="${article.getIsInternational()}" class="badge bg-info">Quốc tế</small></span>
                             </div>
 
                             <hr>

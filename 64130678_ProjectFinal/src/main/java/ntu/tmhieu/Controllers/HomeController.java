@@ -28,29 +28,45 @@ import ntu.tmhieu.Service.ArticleService;
 @Controller
 public class HomeController {
 
-    // Inject các Repository và Service cần thiết để tương tác với dữ liệu
+    // Inject Service để tương tác với logic nghiệp vụ bài viết (nếu có)
     @Autowired
     private ArticleService articleService;
 
+    // Inject Repository để tương tác trực tiếp với dữ liệu bài viết
     @Autowired
     private ArticleRepository articleRepository;
     
+    // Inject Repository để tương tác với dữ liệu về cảm xúc (reactions)
     @Autowired
     private ReactionRepository reactionRepository;
 
+    /**
+     * Hiển thị trang chủ của ứng dụng.
+     * Lấy danh sách tất cả bài viết và 5 bài viết mới nhất để hiển thị.
+     * @param model Đối tượng Model để truyền dữ liệu tới view.
+     * @return Tên view của trang chủ.
+     */
     @GetMapping("/")
     public String home(Model model) {
-        // Lấy danh sách tất cả bài viết
+        // Lấy tất cả bài viết để hiển thị trên trang chủ
         List<Article> articles = articleService.getAllArticles();
         model.addAttribute("articles", articles);
 
-        // Lấy 5 bài viết mới nhất để hiển thị ở sidebar
+        // Lấy 5 bài viết mới nhất để hiển thị trong sidebar hoặc phần nổi bật
         List<Article> latestArticles = articleRepository.findTop5ByOrderByPublicationDateDesc();
         model.addAttribute("latestArticles", latestArticles);
 
         return "frontEndView/index";
     }
 
+    /**
+     * Hiển thị trang chi tiết của một bài viết cụ thể.
+     * Tìm bài viết theo ID, định dạng nội dung và lấy số lượng cảm xúc (like, happy, sad).
+     * @param articleId ID của bài viết cần hiển thị.
+     * @param model Đối tượng Model để truyền dữ liệu tới view.
+     * @return Tên view của trang chi tiết bài viết.
+     * @throws ResponseStatusException nếu không tìm thấy bài viết.
+     */
     @GetMapping("/articles/{articleId}")
     public String showArticleDetail(@PathVariable Integer articleId, Model model) {
         // Tìm bài viết theo ID
@@ -64,14 +80,15 @@ public class HomeController {
         Article article = articleOptional.get();
 
         // Kích hoạt tải thông tin thể loại nếu nó được tải lười (LAZY loading)
+        // (Thực tế chỉ cần truy cập getter là đủ để trigger Hibernate load)
         if (article.getCategory() != null) {
-            article.getCategory().getName();
+            article.getCategory().getName(); 
         }
         
-        // Lấy nội dung thô và định dạng lại để hiển thị xuống dòng trong HTML
+        // Định dạng nội dung bài viết để hiển thị đúng các ký tự xuống dòng trong HTML
         String rawContent = article.getContent();
         String formattedContent = rawContent.replaceAll("\\r\\n", "<br/>"); // Thay thế xuống dòng Windows
-        formattedContent = formattedContent.replaceAll("\\n", "<br/>");     // Thay thế xuống dòng Unix
+        formattedContent = formattedContent.replaceAll("\\n", "<br/>");      // Thay thế xuống dòng Unix
         
         // Thêm dữ liệu bài viết và nội dung đã định dạng vào Model
         model.addAttribute("article", article);
@@ -95,6 +112,12 @@ public class HomeController {
         return "frontEndView/article-detail";
     }
 
+    /**
+     * API endpoint để lấy ảnh thumbnail của bài viết.
+     * Trả về dữ liệu ảnh dưới dạng byte array với kiểu MIME phù hợp và thiết lập cache.
+     * @param articleId ID của bài viết chứa ảnh thumbnail.
+     * @return ResponseEntity chứa dữ liệu ảnh hoặc 404 nếu không tìm thấy.
+     */
     @GetMapping("/article-thumbnails/{articleId}")
     public ResponseEntity<byte[]> getArticleThumbnail(@PathVariable Integer articleId) {
         Optional<Article> articleOptional = articleRepository.findById(articleId);
@@ -117,13 +140,20 @@ public class HomeController {
         return ResponseEntity.notFound().build();
     }
     
+    /**
+     * API endpoint để xử lý việc người dùng bày tỏ cảm xúc (reactions) với bài viết.
+     * Nhận loại cảm xúc và cảm xúc đã chọn trước đó (nếu có) từ frontend để cập nhật database.
+     * @param articleId ID của bài viết được tương tác.
+     * @param payload Map chứa loại cảm xúc mới ('emotion') và loại cảm xúc cũ ('previousEmotion').
+     * @return ResponseEntity chứa số lượng cảm xúc cập nhật dưới dạng JSON.
+     */
     @PostMapping("/api/articles/{articleId}/react")
     @ResponseBody // Đảm bảo Spring trả về dữ liệu JSON thay vì tìm kiếm view.
     public ResponseEntity<Map<String, Long>> reactToArticle(
             @PathVariable Integer articleId,
             @RequestBody Map<String, String> payload) {
         
-        String reactionType = payload.get("emotion");       // Loại cảm xúc mới mà người dùng chọn
+        String reactionType = payload.get("emotion");         // Loại cảm xúc mới mà người dùng chọn
         String previousEmotion = payload.get("previousEmotion"); // Loại cảm xúc đã chọn trước đó (nếu có)
 
         // Tìm bài viết để đảm bảo nó tồn tại
@@ -133,7 +163,7 @@ public class HomeController {
         }
         Article article = articleOptional.get();
 
-        // Xử lý logic thêm/bớt cảm xúc
+        // Xử lý logic thêm/bớt cảm xúc dựa trên lựa chọn của người dùng
         if (reactionType != null && !reactionType.isEmpty()) {
             if ("null".equals(reactionType) && previousEmotion != null && !previousEmotion.isEmpty()) {
                 // Trường hợp: Người dùng hủy cảm xúc đã chọn (nhấn lại nút)

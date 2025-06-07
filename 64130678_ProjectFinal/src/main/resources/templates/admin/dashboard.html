@@ -55,7 +55,7 @@
         .tab-content {
             padding: 20px 0;
         }
-        .table-action-buttons button {
+        .table-action-buttons button, .table-action-buttons a {
             margin-right: 5px;
         }
         .btn-primary {
@@ -72,11 +72,10 @@
         .navbar-brand img {
             vertical-align: middle;
         }
-        /* Style cho các cột có thể click để sắp xếp */
         .sortable-header {
             cursor: pointer;
             position: relative;
-            padding-right: 20px; /* Thêm khoảng trống cho biểu tượng mũi tên */
+            padding-right: 20px;
         }
         .sortable-header .sort-icon {
             position: absolute;
@@ -84,10 +83,10 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 0.8em;
-            opacity: 0.6; /* Làm mờ biểu tượng khi không active */
+            opacity: 0.6;
         }
         .sortable-header.active .sort-icon {
-            opacity: 1; /* Làm rõ biểu tượng khi active */
+            opacity: 1;
         }
     </style>
 </head>
@@ -121,12 +120,7 @@
                 <i class="bi bi-newspaper me-2"></i> Quản lý Bài viết
             </a>
         </li>
-        <li class="nav-item">
-            <a href="#categories-tab" data-bs-toggle="tab" class="nav-link">
-                <i class="bi bi-tags-fill me-2"></i> Quản lý Danh mục
-            </a>
-        </li>
-    </ul>
+        </ul>
 </div>
 
 <div class="main-content">
@@ -139,19 +133,15 @@
                                 data-bs-target="#articles-tab" type="button" role="tab"
                                 aria-controls="articles-tab" aria-selected="true">Bài viết</button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="categories-tab-btn" data-bs-toggle="tab"
-                                data-bs-target="#categories-tab" type="button" role="tab"
-                                aria-controls="categories-tab" aria-selected="false">Danh mục</button>
-                    </li>
-                </ul>
+                    </ul>
 
                 <div class="tab-content" id="adminTabsContent">
                     <div class="tab-pane fade show active" id="articles-tab" role="tabpanel" aria-labelledby="articles-tab-btn">
                         <h2>Quản lý Bài viết</h2>
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#articleModal"
-                                    data-mode="add"><i class="bi bi-plus-circle me-2"></i>Thêm Bài viết</button>
+                            <a th:href="@{/admin/articles/new}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Thêm Bài viết
+                            </a>
                         </div>
 
                         <div class="table-responsive">
@@ -188,12 +178,10 @@
                                     <td th:text="${article.title}"></td>
                                     <td th:text="${#temporals.format(article.publicationDate, 'dd/MM/yyyy HH:mm')}"></td>
                                     <td th:text="${article.category != null ? article.category.name : 'N/A'}"></td>
-                                    <td th:text="${article.isInternational ? 'Có' : 'Không'}"></td>
-                                    <td class="table-action-buttons">
-                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                                data-bs-target="#articleModal" data-mode="edit" th:data-id="${article.articleId}">
+                                    <td th:text="${article.getIsInternational() ? 'Có' : 'Không'}"></td> <td class="table-action-buttons">
+                                        <a th:href="@{/admin/articles/edit/{id}(id=${article.articleId})}" class="btn btn-sm btn-warning">
                                             <i class="bi bi-pencil-square"></i> Sửa
-                                        </button>
+                                        </a>
                                         <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Xóa</button>
                                     </td>
                                 </tr>
@@ -202,107 +190,7 @@
                         </div>
                     </div>
 
-                    <div class="tab-pane fade" id="categories-tab" role="tabpanel" aria-labelledby="categories-tab-btn">
-                        <h2>Quản lý Danh mục</h2>
-                        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#categoryModal"
-                                data-mode="add"><i class="bi bi-plus-circle me-2"></i>Thêm Danh mục</button>
-
-                        <div class="table-responsive">
-                            <table class="table table-hover table-bordered">
-                                <thead class="table-light">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Tên Danh mục</th>
-                                    <th>Hành động</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="category : ${categories}">
-                                    <td th:text="${category.categoryId}"></td>
-                                    <td th:text="${category.name}"></td>
-                                    <td class="table-action-buttons">
-                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                                data-bs-target="#categoryModal" data-mode="edit" th:data-id="${category.categoryId}">
-                                            <i class="bi bi-pencil-square"></i> Sửa
-                                        </button>
-                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Xóa</button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="articleModal" tabindex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="articleModalLabel">Thêm/Sửa Bài viết</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="articleForm">
-                    <input type="hidden" id="articleId" name="articleId">
-                    <div class="mb-3">
-                        <label for="articleTitle" class="form-label">Tiêu đề</label>
-                        <input type="text" class="form-control" id="articleTitle" name="title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="articleContent" class="form-label">Nội dung</label>
-                        <textarea class="form-control" id="articleContent" name="content" rows="10"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="articleCategory" class="form-label">Thể loại</label>
-                        <select class="form-select" id="articleCategory" name="categoryId" required>
-                            <option value="">-- Chọn thể loại --</option>
-                            <option th:each="cat : ${categories}" th:value="${cat.categoryId}" th:text="${cat.name}"></option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="articleImage" class="form-label">Ảnh Thumbnail</label>
-                        <input type="file" class="form-control" id="articleImage" name="thumbnailImageFile" accept="image/*">
-                        <div id="currentArticleImage" class="mt-2">
-                            <img src="https://via.placeholder.com/150x100?text=Ảnh+Hiện+Tại" alt="Ảnh Thumbnail Hiện Tại" style="max-width: 150px; display: none;">
-                        </div>
-                    </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="isInternational" name="isInternational">
-                        <label class="form-check-label" for="isInternational">Bài viết quốc tế</label>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button type="submit" class="btn btn-primary">Lưu Bài viết</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="categoryModalLabel">Thêm/Sửa Danh mục</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="categoryForm">
-                    <input type="hidden" id="categoryId" name="categoryId">
-                    <div class="mb-3">
-                        <label for="categoryName" class="form-label">Tên Danh mục</label>
-                        <input type="text" class="form-control" id="categoryName" name="name" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button type="submit" class="btn btn-primary">Lưu Danh mục</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
@@ -313,71 +201,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const articleModal = document.getElementById('articleModal');
-        articleModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const mode = button.getAttribute('data-mode');
-            const articleId = button.getAttribute('data-id');
-
-            const modalTitle = articleModal.querySelector('.modal-title');
-            const articleForm = document.getElementById('articleForm');
-            const currentArticleImagePreview = document.querySelector('#currentArticleImage img');
-            const articleImageInput = document.getElementById('articleImage');
-
-            articleForm.reset();
-            document.getElementById('articleId').value = '';
-            currentArticleImagePreview.style.display = 'none';
-            currentArticleImagePreview.src = '';
-
-            if (mode === 'add') {
-                modalTitle.textContent = 'Thêm Bài viết mới';
-                document.getElementById('articleCategory').value = "";
-            } else if (mode === 'edit') {
-                modalTitle.textContent = 'Sửa Bài viết';
-                document.getElementById('articleId').value = articleId;
-
-                fetch(`/admin/api/articles/${articleId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('articleTitle').value = data.title;
-                        document.getElementById('articleContent').value = data.content;
-                        document.getElementById('isInternational').checked = data.international;
-                        document.getElementById('articleCategory').value = data.category ? data.category.categoryId : "";
-
-                        if (data.thumbnailImageData && data.thumbnailMimeType) {
-                            currentArticleImagePreview.src = 'data:' + data.thumbnailMimeType + ';base64,' + data.thumbnailImageData;
-                            currentArticleImagePreview.style.display = 'block';
-                        }
-                    })
-                    .catch(error => console.error('Lỗi khi lấy dữ liệu bài viết:', error));
-            }
-        });
-
-        const categoryModal = document.getElementById('categoryModal');
-        categoryModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const mode = button.getAttribute('data-mode');
-            const categoryId = button.getAttribute('data-id');
-
-            const modalTitle = categoryModal.querySelector('.modal-title');
-            const categoryForm = document.getElementById('categoryForm');
-
-            categoryForm.reset();
-            document.getElementById('categoryId').value = '';
-
-            if (mode === 'add') {
-                modalTitle.textContent = 'Thêm Danh mục mới';
-            } else if (mode === 'edit') {
-                modalTitle.textContent = 'Sửa Danh mục';
-                document.getElementById('categoryId').value = categoryId;
-                fetch(`/admin/api/categories/${categoryId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('categoryName').value = data.name;
-                    })
-                    .catch(error => console.error('Lỗi khi lấy dữ liệu danh mục:', error));
-            }
-        });
 
         // --- JavaScript cho chức năng sắp xếp bằng cách click vào header cột ---
         const sortableHeaders = document.querySelectorAll('.sortable-header');
@@ -389,22 +212,20 @@
                 let currentSortBy = urlParams.get('sortBy');
                 let currentSortOrder = urlParams.get('sortOrder');
 
-                let newSortOrder = 'asc'; // Mặc định là tăng dần cho cột mới click vào
+                let newSortOrder = 'asc';
 
                 if (currentSortBy === sortBy) {
-                    // Nếu đang sắp xếp theo cột này, đảo ngược thứ tự
                     newSortOrder = (currentSortOrder === 'asc' ? 'desc' : 'asc');
                 } else {
-                    // Nếu sắp xếp theo cột mới, thứ tự mặc định là tăng dần
-                    newSortOrder = 'asc'; // Hoặc 'desc' nếu bạn muốn ID/Ngày mặc định giảm dần
+                    newSortOrder = 'asc';
                 }
 
-                // Chuyển hướng đến URL mới với các tham số sắp xếp
+                // Chuyển hướng về trang dashboard (không cần hash fragment vì chỉ còn 1 tab)
                 window.location.href = `/admin/dashboard?sortBy=${sortBy}&sortOrder=${newSortOrder}`;
             });
         });
 
-        // Highlight active sort header và hiển thị mũi tên khi trang được tải
+        // Xử lý active state và icon cho sorting khi tải trang
         const urlParams = new URLSearchParams(window.location.search);
         const activeSortBy = urlParams.get('sortBy');
         const activeSortOrder = urlParams.get('sortOrder');

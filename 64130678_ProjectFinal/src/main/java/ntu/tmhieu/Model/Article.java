@@ -26,6 +26,7 @@ public class Article {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Lob // Đảm bảo dữ liệu lớn được xử lý đúng
     @Column(name = "thumbnail_image_data", columnDefinition = "MEDIUMBLOB")
     private byte[] thumbnailImageData;
 
@@ -79,11 +80,13 @@ public class Article {
         this.publicationDate = publicationDate;
     }
 
-    public boolean isInternational() {
+    // ***** THAY ĐỔI Ở ĐÂY: Đổi tên getter cho boolean *****
+    public boolean getIsInternational() {
         return isInternational;
     }
 
-    public void setInternational(boolean international) {
+    // ***** THAY ĐỔI Ở ĐÂY: Đổi tên setter cho boolean *****
+    public void setIsInternational(boolean international) {
         isInternational = international;
     }
 
