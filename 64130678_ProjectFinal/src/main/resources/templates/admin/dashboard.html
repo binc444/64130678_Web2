@@ -120,20 +120,26 @@
                 <i class="bi bi-newspaper me-2"></i> Quản lý Bài viết
             </a>
         </li>
-        </ul>
+    </ul>
 </div>
 
 <div class="main-content">
     <div class="container-fluid mt-4">
         <div class="card shadow-sm">
             <div class="card-body">
+                <div th:if="${message}" th:classappend="${alertClass != null ? alertClass : 'alert-info'}"
+                     class="alert alert-dismissible fade show" role="alert">
+                    <span th:text="${message}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
                 <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="articles-tab-btn" data-bs-toggle="tab"
                                 data-bs-target="#articles-tab" type="button" role="tab"
                                 aria-controls="articles-tab" aria-selected="true">Bài viết</button>
                     </li>
-                    </ul>
+                </ul>
 
                 <div class="tab-content" id="adminTabsContent">
                     <div class="tab-pane fade show active" id="articles-tab" role="tabpanel" aria-labelledby="articles-tab-btn">
@@ -178,19 +184,45 @@
                                     <td th:text="${article.title}"></td>
                                     <td th:text="${#temporals.format(article.publicationDate, 'dd/MM/yyyy HH:mm')}"></td>
                                     <td th:text="${article.category != null ? article.category.name : 'N/A'}"></td>
-                                    <td th:text="${article.getIsInternational() ? 'Có' : 'Không'}"></td> <td class="table-action-buttons">
+                                    <td th:text="${article.getIsInternational() ? 'Có' : 'Không'}"></td>
+                                    <td class="table-action-buttons">
                                         <a th:href="@{/admin/articles/edit/{id}(id=${article.articleId})}" class="btn btn-sm btn-warning">
                                             <i class="bi bi-pencil-square"></i> Sửa
                                         </a>
-                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Xóa</button>
+                                        <button class="btn btn-sm btn-danger delete-article-btn"
+                                                data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
+                                                th:data-id="${article.articleId}"
+                                                th:data-title="${article.title}">
+                                            <i class="bi bi-trash"></i> Xóa
+                                        </button>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                    </div>
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận Xóa Bài viết</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xóa bài viết "<strong id="articleTitleToDelete"></strong>" (ID: <strong id="articleIdToDelete"></strong>) không?
+                Hành động này không thể hoàn tác.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form id="deleteArticleForm" action="" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </form>
             </div>
         </div>
     </div>
@@ -245,6 +277,28 @@
                     }
                 }
             }
+        }
+
+        // --- JavaScript cho Modal Xác nhận Xóa Bài viết ---
+        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+        if (confirmDeleteModal) {
+            confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+                // Nút kích hoạt modal
+                const button = event.relatedTarget;
+                // Lấy thông tin từ data-* attributes
+                const articleId = button.getAttribute('data-id');
+                const articleTitle = button.getAttribute('data-title');
+
+                // Cập nhật nội dung modal
+                const modalArticleTitle = confirmDeleteModal.querySelector('#articleTitleToDelete');
+                const modalArticleId = confirmDeleteModal.querySelector('#articleIdToDelete');
+                const deleteForm = confirmDeleteModal.querySelector('#deleteArticleForm');
+
+                modalArticleTitle.textContent = articleTitle;
+                modalArticleId.textContent = articleId;
+                // Cập nhật action của form để trỏ đến đúng endpoint xóa
+                deleteForm.action = `/admin/articles/delete/${articleId}`;
+            });
         }
     });
 </script>

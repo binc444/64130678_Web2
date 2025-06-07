@@ -22,6 +22,7 @@ import ntu.tmhieu.Model.Article;
 import ntu.tmhieu.Model.Category;
 import ntu.tmhieu.Repository.ArticleRepository;
 import ntu.tmhieu.Repository.CategoryRepository;
+import ntu.tmhieu.Service.ArticleService;
 
 @Controller
 @RequestMapping("/admin")
@@ -34,6 +35,10 @@ public class AdminController {
     // Inject Repository để tương tác với dữ liệu danh mục
     @Autowired
     private CategoryRepository categoryRepository;
+    
+    // tương tác với dữ liệu danh mục
+    @Autowired
+    private ArticleService articleService;
 
     /**
      * Hiển thị trang dashboard quản trị, liệt kê danh sách các bài viết.
@@ -162,6 +167,25 @@ public class AdminController {
             ra.addFlashAttribute("errorMessage", "Lỗi khi lưu bài viết: " + e.getMessage());
         }
         return "redirect:/admin/dashboard";
+    }
+    
+    /**
+     * Xử lý yêu cầu xóa bài viết.
+     * @param id ID của bài viết cần xóa.
+     * @param redirectAttributes Để thêm thông báo flash.
+     * @return Chuyển hướng về trang quản lý bài viết.
+     */
+    @PostMapping("/articles/delete/{id}")
+    public String deleteArticle(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            articleService.deleteArticle(id);
+            redirectAttributes.addFlashAttribute("message", "Bài viết đã được xóa thành công!");
+            redirectAttributes.addFlashAttribute("alertClass", "alert-success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", "Xóa bài viết thất bại: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+        }
+        return "redirect:/admin/dashboard"; // Chuyển hướng về trang dashboard sau khi xóa
     }
 
     /**
