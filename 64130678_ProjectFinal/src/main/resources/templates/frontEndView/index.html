@@ -41,7 +41,7 @@
                         <ul class="pagination justify-content-center">
                             <li class="page-item" th:classappend="${articlePage.first ? 'disabled' : ''}">
                                 <a class="page-link"
-                                   th:href="@{/(page=${currentPage - 1}, size=${articlePage.size}, categoryId=${currentCategoryId})}"
+                                   th:href="@{/(page=${currentPage - 1}, size=${articlePage.size})}"
                                    aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
@@ -50,13 +50,13 @@
                             <li class="page-item" th:each="i : ${#numbers.sequence(0, articlePage.totalPages - 1)}"
                                 th:classappend="${i == currentPage ? 'active' : ''}">
                                 <a class="page-link"
-                                   th:href="@{/(page=${i}, size=${articlePage.size}, categoryId=${currentCategoryId})}"
+                                   th:href="@{/(page=${i}, size=${articlePage.size})}"
                                    th:text="${i + 1}"></a>
                             </li>
 
                             <li class="page-item" th:classappend="${articlePage.last ? 'disabled' : ''}">
                                 <a class="page-link"
-                                   th:href="@{/(page=${currentPage + 1}, size=${articlePage.size}, categoryId=${currentCategoryId})}"
+                                   th:href="@{/(page=${currentPage + 1}, size=${articlePage.size})}"
                                    aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>

@@ -70,7 +70,7 @@ public class HomeController {
 
         Page<Article> articlePage;
         String currentCategoryName = "Tất cả bài viết"; // Mặc định là "Tất cả bài viết"
-
+        
         // Logic để lọc bài viết theo categoryId
         if (categoryId != null) {
             articlePage = articleService.getArticlesByCategoryPaginated(categoryId, pageable);

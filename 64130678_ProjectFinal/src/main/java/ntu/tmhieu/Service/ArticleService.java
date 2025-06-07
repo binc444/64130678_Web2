@@ -26,6 +26,7 @@ public class ArticleService {
     public Page<Article> getArticlesByCategoryPaginated(Integer categoryId, Pageable pageable) {
         return articleRepository.findByCategoryCategoryId(categoryId, pageable);
     }
+    
 
     public void deleteArticle(Integer id) {
         articleRepository.deleteById(id);

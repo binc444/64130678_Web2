@@ -14,5 +14,5 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     
     // Tìm bài viết theo Category ID và Pageable 
     Page<Article> findByCategoryCategoryId(Integer categoryId, Pageable pageable);
-
+    
 }
