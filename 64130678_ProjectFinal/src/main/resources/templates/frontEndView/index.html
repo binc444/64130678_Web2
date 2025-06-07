@@ -36,7 +36,34 @@
                             </div>
                         </div>
                     </div>
-                </div>
+
+                    <nav aria-label="Page navigation" th:if="${articlePage.totalPages > 1}">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:classappend="${articlePage.first ? 'disabled' : ''}">
+                                <a class="page-link"
+                                   th:href="@{/(page=${currentPage - 1}, size=${articlePage.size})}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, articlePage.totalPages - 1)}"
+                                th:classappend="${i == currentPage ? 'active' : ''}">
+                                <a class="page-link"
+                                   th:href="@{/(page=${i}, size=${articlePage.size})}"
+                                   th:text="${i + 1}"></a>
+                            </li>
+
+                            <li class="page-item" th:classappend="${articlePage.last ? 'disabled' : ''}">
+                                <a class="page-link"
+                                   th:href="@{/(page=${currentPage + 1}, size=${articlePage.size})}"
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    </div>
 
                 <div class="col-lg-4 col-md-12 mt-4 mt-lg-0">
                     <div class="card shadow-sm border-0">

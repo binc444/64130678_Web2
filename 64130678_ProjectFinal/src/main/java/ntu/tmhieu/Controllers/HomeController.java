@@ -6,6 +6,10 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,24 +40,41 @@ public class HomeController {
     // Inject Repository để tương tác trực tiếp với dữ liệu bài viết
     @Autowired
     private ArticleRepository articleRepository;
-    
+
     // Inject Repository để tương tác với dữ liệu về cảm xúc (reactions)
     @Autowired
     private ReactionRepository reactionRepository;
 
     /**
-     * Hiển thị trang chủ của ứng dụng.
-     * Lấy danh sách tất cả bài viết và 5 bài viết mới nhất để hiển thị.
+     * Hiển thị trang chủ của ứng dụng với chức năng phân trang.
+     * Lấy danh sách bài viết theo trang và kích thước trang, sắp xếp theo ngày xuất bản mới nhất.
+     * Đồng thời lấy 5 bài viết mới nhất để hiển thị trong sidebar.
      * @param model Đối tượng Model để truyền dữ liệu tới view.
+     * @param page Số trang hiện tại (mặc định là 0).
+     * @param size Số lượng bài viết trên mỗi trang (mặc định là 6).
      * @return Tên view của trang chủ.
      */
     @GetMapping("/")
-    public String home(Model model) {
-        // Lấy tất cả bài viết để hiển thị trên trang chủ
-        List<Article> articles = articleService.getAllArticles();
-        model.addAttribute("articles", articles);
+    public String home(
+            Model model,
+            @RequestParam(defaultValue = "0") int page, // Trang hiện tại (0-indexed)
+            @RequestParam(defaultValue = "6") int size) { // Số bài viết mỗi trang
+
+        // Tạo đối tượng Pageable để phân trang và sắp xếp.
+        // Sắp xếp theo "publicationDate" giảm dần (mới nhất trước)
+    	Pageable pageable = PageRequest.of(page, size, Sort.by("articleId").ascending());
+
+        // Lấy trang bài viết từ ArticleService
+        Page<Article> articlePage = articleService.getArticlesPaginated(pageable);
+
+        // Truyền dữ liệu phân trang vào Model
+        model.addAttribute("articles", articlePage.getContent()); // Danh sách bài viết cho trang hiện tại
+        model.addAttribute("articlePage", articlePage);           // Đối tượng Page để dùng trong Thymeleaf (tổng số trang, v.v.)
+        model.addAttribute("currentPage", page);                  // Trang hiện tại (để active nút phân trang)
+        model.addAttribute("pageSize", size);                     // Kích thước trang hiện tại
 
         // Lấy 5 bài viết mới nhất để hiển thị trong sidebar hoặc phần nổi bật
+        // (Đây là một danh sách riêng, không phân trang, chỉ lấy 5 bài)
         List<Article> latestArticles = articleRepository.findTop5ByOrderByPublicationDateDesc();
         model.addAttribute("latestArticles", latestArticles);
 
@@ -82,19 +104,19 @@ public class HomeController {
         // Kích hoạt tải thông tin thể loại nếu nó được tải lười (LAZY loading)
         // (Thực tế chỉ cần truy cập getter là đủ để trigger Hibernate load)
         if (article.getCategory() != null) {
-            article.getCategory().getName(); 
+            article.getCategory().getName();
         }
-        
+
         // Định dạng nội dung bài viết để hiển thị đúng các ký tự xuống dòng trong HTML
         String rawContent = article.getContent();
         String formattedContent = rawContent.replaceAll("\\r\\n", "<br/>"); // Thay thế xuống dòng Windows
         formattedContent = formattedContent.replaceAll("\\n", "<br/>");      // Thay thế xuống dòng Unix
-        
+
         // Thêm dữ liệu bài viết và nội dung đã định dạng vào Model
         model.addAttribute("article", article);
         model.addAttribute("pageTitle", article.getTitle());
         model.addAttribute("formattedContent", formattedContent);
-        
+
         // Lấy số lượt "Thích", "Vui", "Buồn" hiện tại của bài viết từ database
         long likes = reactionRepository.countByArticleArticleIdAndReactionType(articleId, "like");
         long happy = reactionRepository.countByArticleArticleIdAndReactionType(articleId, "happy");
@@ -128,7 +150,7 @@ public class HomeController {
             if (article.getThumbnailImageData() != null && article.getThumbnailMimeType() != null) {
                 MediaType contentType = MediaType.parseMediaType(article.getThumbnailMimeType());
                 // Thiết lập Cache-Control để trình duyệt lưu ảnh trong 1 giờ
-                CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic(); 
+                CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic();
 
                 return ResponseEntity.ok()
                         .contentType(contentType)
@@ -139,7 +161,7 @@ public class HomeController {
         // Trả về lỗi 404 nếu không tìm thấy bài viết hoặc ảnh thumbnail.
         return ResponseEntity.notFound().build();
     }
-    
+
     /**
      * API endpoint để xử lý việc người dùng bày tỏ cảm xúc (reactions) với bài viết.
      * Nhận loại cảm xúc và cảm xúc đã chọn trước đó (nếu có) từ frontend để cập nhật database.
@@ -152,7 +174,7 @@ public class HomeController {
     public ResponseEntity<Map<String, Long>> reactToArticle(
             @PathVariable Integer articleId,
             @RequestBody Map<String, String> payload) {
-        
+
         String reactionType = payload.get("emotion");         // Loại cảm xúc mới mà người dùng chọn
         String previousEmotion = payload.get("previousEmotion"); // Loại cảm xúc đã chọn trước đó (nếu có)
 
