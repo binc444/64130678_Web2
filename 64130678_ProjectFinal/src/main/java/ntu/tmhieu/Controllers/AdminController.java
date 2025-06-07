@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,30 +46,31 @@ public class AdminController {
     /**
      * Hiển thị trang dashboard quản trị, liệt kê danh sách các bài viết.
      * Cho phép sắp xếp danh sách bài viết theo các tiêu chí khác nhau.
-     * @param model Đối tượng Model để truyền dữ liệu tới view.
-     * @param sortBy Tiêu chí sắp xếp (mặc định là articleId).
-     * @param sortOrder Thứ tự sắp xếp (mặc định là giảm dần).
+     * Phân trang
      * @return Tên view của trang dashboard.
      */
     @GetMapping("/dashboard")
     public String adminDashboard(
             Model model,
-            @RequestParam(defaultValue = "articleId") String sortBy,
-            @RequestParam(defaultValue = "desc") String sortOrder) {
+            @RequestParam(defaultValue = "0") int page, // Trang hiện tại (mặc định 0)
+            @RequestParam(defaultValue = "6") int size, // Số lượng mục trên mỗi trang (mặc định 6)
+            @RequestParam(defaultValue = "articleId") String sortBy, // Cột sắp xếp mặc định
+            @RequestParam(defaultValue = "asc") String sortOrder) { // Thứ tự sắp xếp mặc định
 
-        // Xác định hướng và tiêu chí sắp xếp
-        Sort.Direction direction = sortOrder.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        // Lấy tất cả bài viết từ cơ sở dữ liệu và truyền vào model
-        List<Article> articles = articleRepository.findAll(sort);
-        model.addAttribute("articles", articles);
+        Page<Article> articlePage = articleService.getArticlesPaginated(pageable);
 
-        // Truyền thông tin sắp xếp hiện tại để giữ trạng thái trên giao diện
+        model.addAttribute("articles", articlePage.getContent()); // Lấy danh sách bài viết cho trang hiện tại
+        model.addAttribute("articlePage", articlePage); // Đối tượng Page để dùng cho phân trang trên HTML
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortOrder", sortOrder);
 
-        return "admin/dashboard";
+        // ... các model attribute khác nếu có (ví dụ: categories cho tab categories)
+        return "admin/dashboard"; // Trả về tên view
     }
 
     /**

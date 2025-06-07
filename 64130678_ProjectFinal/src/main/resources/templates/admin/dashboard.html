@@ -200,7 +200,34 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+
+                        <nav aria-label="Page navigation" th:if="${articlePage.totalPages > 1}">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" th:classappend="${articlePage.first ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                       th:href="@{/admin/dashboard(page=${currentPage - 1}, size=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+
+                                <li class="page-item" th:each="i : ${#numbers.sequence(0, articlePage.totalPages - 1)}"
+                                    th:classappend="${i == currentPage ? 'active' : ''}">
+                                    <a class="page-link"
+                                       th:href="@{/admin/dashboard(page=${i}, size=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                                       th:text="${i + 1}"></a>
+                                </li>
+
+                                <li class="page-item" th:classappend="${articlePage.last ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                       th:href="@{/admin/dashboard(page=${currentPage + 1}, size=${pageSize}, sortBy=${sortBy}, sortOrder=${sortOrder})}"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        </div>
                 </div>
             </div>
         </div>
@@ -243,17 +270,19 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 let currentSortBy = urlParams.get('sortBy');
                 let currentSortOrder = urlParams.get('sortOrder');
+                let currentPage = urlParams.get('page') || '0'; // Lấy trang hiện tại
+                let pageSize = urlParams.get('size') || '6';   // Lấy kích thước trang
 
                 let newSortOrder = 'asc';
 
                 if (currentSortBy === sortBy) {
                     newSortOrder = (currentSortOrder === 'asc' ? 'desc' : 'asc');
                 } else {
-                    newSortOrder = 'asc';
+                    newSortOrder = 'asc'; // Mặc định sắp xếp tăng dần khi đổi cột
                 }
 
-                // Chuyển hướng về trang dashboard (không cần hash fragment vì chỉ còn 1 tab)
-                window.location.href = `/admin/dashboard?sortBy=${sortBy}&sortOrder=${newSortOrder}`;
+                // Chuyển hướng về trang dashboard, giữ nguyên page và size
+                window.location.href = `/admin/dashboard?page=${currentPage}&size=${pageSize}&sortBy=${sortBy}&sortOrder=${newSortOrder}`;
             });
         });
 
@@ -283,20 +312,16 @@
         const confirmDeleteModal = document.getElementById('confirmDeleteModal');
         if (confirmDeleteModal) {
             confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
-                // Nút kích hoạt modal
                 const button = event.relatedTarget;
-                // Lấy thông tin từ data-* attributes
                 const articleId = button.getAttribute('data-id');
                 const articleTitle = button.getAttribute('data-title');
 
-                // Cập nhật nội dung modal
                 const modalArticleTitle = confirmDeleteModal.querySelector('#articleTitleToDelete');
                 const modalArticleId = confirmDeleteModal.querySelector('#articleIdToDelete');
                 const deleteForm = confirmDeleteModal.querySelector('#deleteArticleForm');
 
                 modalArticleTitle.textContent = articleTitle;
                 modalArticleId.textContent = articleId;
-                // Cập nhật action của form để trỏ đến đúng endpoint xóa
                 deleteForm.action = `/admin/articles/delete/${articleId}`;
             });
         }
